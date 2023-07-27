@@ -1,5 +1,4 @@
 import numpy as np
-import globals as g
 
 def nd_data(
         l_f, 
@@ -20,7 +19,8 @@ def nd_data(
         Xb_r,
         Xc_r,
         b_f,
-        b_r
+        b_r,
+        f_
 ):
     """
     Nondimensionalize the input data
@@ -66,6 +66,8 @@ def nd_data(
         Front wing location in cm
     b_r: float
         Rear wing location in cm
+    f_: float
+        Flapping frequency in Hz
 
     Returns
     -------
@@ -117,7 +119,7 @@ def nd_data(
     h_ = np.array([h_f, h_f, h_r, h_r])
 
     # Period
-    T_ = 1.0 / g.f_
+    T_ = 1.0 / f_
     rt = T_[0] / T_
 
     # Convert angles to radians

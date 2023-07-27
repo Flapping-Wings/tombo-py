@@ -45,7 +45,7 @@ def tombo():
         xb_f, xc_f, xb_r, xc_r, b_f, b_r, e, d_, v_, rt = \
         nd_data(g.l_f, g.c_f, g.h_f, g.l_r, g.c_r, g.h_r,
                 g.phiT_, g.phiB_, g.a_, g.beta_, g.delta_, g.gMax_, g.U_,
-                g.xb_f, g.xc_f, g.xb_r, g.xc_r, g.b_f, g.b_r)
+                g.xb_f, g.xc_f, g.xb_r, g.xc_r, g.b_f, g.b_r, g.f_)
 
     # Cutoff distance of the extension of a vortex line; velocity evaluation points
     # within this distance from the vortex line and/or its extension are set to zero
