@@ -414,8 +414,8 @@ def tombo():
             nxw_r = nxb_r
             Xw_r[:, :, :nxb_r, :] = Xs_r
         else:
-            GAMw_f, nxw_f, Xw_f = add_wake(nxb_f, GAMAb_f, Xs_f, GAMw_f, Xw_f)
-            GAMw_r, nxw_r, Xw_r = add_wake(nxb_r, GAMAb_r, Xs_r, GAMw_r, Xw_r)
+            GAMw_f, nxw_f, Xw_f = add_wake(g.istep, nxb_f, GAMAb_f, Xs_f, GAMw_f, Xw_f)
+            GAMw_r, nxw_r, Xw_r = add_wake(g.istep, nxb_r, GAMAb_r, Xs_r, GAMw_r, Xw_r)
 
         if g.idebg:
             print(f"End {g.istep + 1}:")
