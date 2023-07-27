@@ -40,7 +40,7 @@ gplot: bool = True
 """Toggle gamma plot"""
 wplot: bool = True
 """Toggle wake vortex plot"""
-idebg: bool = False
+idebg: bool = True
 """Toggle debug prints"""
 
 
@@ -87,11 +87,11 @@ acamber: float = 0.2
 
 hfactor_f: float = 0.1
 """Ratio of border element height to wing chord length (front)"""
-wfactor_f: float = 1
+wfactor_f: float = 3
 """Ratio of border element width to border element height (front)"""
 hfactor_r: float = 0.1
 """Ratio of border element height to wing chord length (rear)"""
-wfactor_r: float = 1
+wfactor_r: float = 3
 """Ratio of border element width to border element height (rear)"""
 
 lt_f: float = 2
@@ -110,49 +110,6 @@ bang_r: float = 30
 
 ielong: bool  = False
 """Toggle fixed number of border elements"""
-
-
-# Front wing
-
-xb_f = None
-"""Border element coordinates (front)"""
-nxb_f = None
-"""Number of border elements (front)"""
-nb_f = None
-"""Unit normal to the border elements (front)"""
-xc_f = None
-"""Center element coordinates (front)"""
-nxc_f = None
-"""Number of center elements (front)"""
-nc_f = None
-"""Unit normal to the center elements (front)"""
-l_f = None
-"""Wing span (front)"""
-c_f = None
-"""Wing chord length (front)"""
-h_f = None
-"""Border height (front)"""
-
-# Rear wing
-
-xb_r = None
-"""Border element coordinates (rear)"""
-nxb_r = None
-"""Number of border elements (rear)"""
-nb_r = None
-"""Unit normal to the border elements (rear)"""
-xc_r = None
-"""Center element coordinates (rear)"""
-nxc_r = None
-"""Number of center elements (rear)"""
-nc_r = None
-"""Unit normal to the center elements (rear)"""
-l_r = None
-"""Wing span (rear)"""
-c_r = None
-"""Wing chord length (rear)"""
-h_r = None
-"""Border height (rear)"""
 
 
 # Wing motion
@@ -241,3 +198,15 @@ aimpw_r = None
 
 """Plot Variables Dictionary"""
 iterations = []
+
+
+"""Check config values"""
+
+if np.any(p < 4):
+    raise ValueError("p must >=4 for all wings")
+
+if np.any(np.abs(rtOff) > 0.5):
+    raise ValueError("-0.5 <= rtOff <= 0.5 must be satisfied for all wings")
+
+if np.any((tau < 0) | (tau >= 2)):
+    raise ValueError("0 <= tau < 2 must be satisfied for all wings")
