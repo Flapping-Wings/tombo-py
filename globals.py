@@ -75,8 +75,6 @@ b_r: float = 1.5
 
 # General
 
-itaper: bool = None
-"""Toggle wing taper"""
 icamber: int = 0
 """
 Camber direction: 
