@@ -106,6 +106,8 @@ def nd_data(
         Difference between top and bottom stroke angles
     d_: ndarray
         Total stroke length
+    v_: ndarray
+        Stroke velocity
     """
     # Wing span, chord, and border height
     l_ = np.array([l_f, l_f, l_r, l_r])
@@ -149,10 +151,10 @@ def nd_data(
     g.t_ = T_[0] / 2.0
 
     # Reference velocity - use the right front wing flapping velocity
-    g.v_ = d_[0] / g.t_
+    v_ = d_ / g.t_
 
     # Ambient velocity (nondimensional)
-    U = U_ / g.v_
+    U = U_ / v_[0]
 
     return l, c, h, phiT, phiB, a, beta, delta, gMax, U, Xb_f, Xc_f, Xb_r, Xc_r, \
-        b_f, b_r, e, d_
+        b_f, b_r, e, d_, v_

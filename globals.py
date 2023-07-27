@@ -162,8 +162,6 @@ h_r = None
 # Wing motion
 # -----------
 
-v_: float = None
-"""Reference velocity"""
 phiT_: npt.NDArray[np.floating] = np.array([80.0, 80.0, 80.0, 80.0])
 """Top stroke angle in degrees"""
 phiB_: npt.NDArray[np.floating] = np.array([-45.0, -45.0, -45.0, -45.0])
