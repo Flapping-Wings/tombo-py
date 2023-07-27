@@ -22,7 +22,91 @@ def nd_data(
         b_f,
         b_r
 ):
-    """Nondimensionalize the input data"""
+    """
+    Nondimensionalize the input data
+    
+    Parameters
+    ----------
+    l_f: float
+        Wing span (front)
+    c_f: float
+        Wing chord length (front)
+    h_f: float
+        Border element height (front)
+    l_r: float
+        Wing span (rear)
+    c_r: float
+        Wing chord length (rear)
+    h_r: float
+        Border element height (rear)
+    phiT_: ndarray
+        Top stroke angle in degrees
+    phiB_: ndarray
+        Bottom stroke angle in degrees
+    a_: ndarray
+        Rotation axis offset in cm
+    beta_: ndarray
+        Stroke plane angle in degrees wrt the body axis 
+    delta_: float
+        Body angle in degrees
+    gMax_: ndarray
+        Max rotation amplitude in degrees; actual rotation is 2*gMax
+    U_: ndarray
+        Ambient velocity in (x, y, z); can be interpreted as the flight
+        velocity when the wind is calm
+    Xb: ndarray[j, n, i]
+        Border element coordinates (front)
+    Xc: ndarray[j, n, i]
+        Center element coordinates (front)
+    Xb_r: ndarray[j, n, i]
+        Border element coordinates (rear)
+    Xc_r: ndarray[j, n, i]
+        Center element coordinates (rear)
+    b_f: float 
+        Front wing location in cm
+    b_r: float
+        Rear wing location in cm
+
+    Returns
+    -------
+    l: ndarray
+        Wing spans (nondimensional)
+    c: ndarray
+        Wing chord lengths (nondimensional)
+    h: ndarray
+        Border element height (nondimensional)
+    phiT: ndarray
+        Top stroke angle in radians
+    phiB: ndarray
+        Bottom stroke angle in radians
+    a: ndarray
+        Rotation axis offset (nondimensional)
+    beta: ndarray
+        Stroke plane angle in radians wrt the body axis 
+    delta: float
+        Body angle in radians
+    gMax: ndarray
+        Max rotation amplitude in radians; actual rotation is 2*gMax
+    U: ndarray
+        Ambient velocity in (x, y, z); can be interpreted as the flight
+        velocity when the wind is calm (nondimensional)
+    Xb: ndarray[j, n, i]
+        Border element coordinates (front) (nondimensional)
+    Xc: ndarray[j, n, i]
+        Center element coordinates (front) (nondimensional)
+    Xb_r: ndarray[j, n, i]
+        Border element coordinates (rear) (nondimensional)
+    Xc_r: ndarray[j, n, i]
+        Center element coordinates (rear) (nondimensional)
+    b_f: float 
+        Front wing location (nondimensional)
+    b_r: float
+        Rear wing location (nondimensional)
+    e: ndarray
+        Difference between top and bottom stroke angles
+    d: float
+        Reference length TODO: clarify
+    """
     # Wing span, chord, and border height
     l_ = np.array([l_f, l_f, l_r, l_r])
     c_ = np.array([c_f, c_f, c_r, c_r])
@@ -31,7 +115,6 @@ def nd_data(
     # Period
     T_ = 1.0 / g.f_
     g.rt = T_[0] / T_
-    # print statement here
 
     # Convert angles to radians
     fac = np.pi / 180
@@ -46,15 +129,13 @@ def nd_data(
     dT_ = l_ * phiT
     dB_ = l_ * -phiB
     g.d_ = dT_ + dB_
-    # print here
-    e_ = dT_ - dB_       # Stroke difference
+    e_ = dT_ - dB_
     d = g.d_ / g.d_[0]      # d_[0] is the reference length
 
     a = a_ / g.d_[0]
     c = c_ / g.d_[0]
     l = l_ / g.d_[0]
     h = h_ / g.d_[0]
-    # print here
 
     b_f = b_f / g.d_[0]
     b_r = b_r / g.d_[0]
@@ -70,11 +151,9 @@ def nd_data(
 
     # Reference velocity - use the right front wing flapping velocity
     g.v_ = g.d_[0] / g.t_
-    # print here
 
     # Ambient velocity (nondimensional)
     U = U_ / g.v_
-    # print here
 
     return l, c, h, phiT, phiB, a, beta, delta, gMax, U, Xb_f, Xc_f, Xb_r, Xc_r, \
         b_f, b_r, e, d
