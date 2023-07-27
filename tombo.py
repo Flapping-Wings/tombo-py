@@ -50,7 +50,6 @@ def tombo():
     g.LCUT = 0.1 * h[0]
 
     check_input()
-    log_input(c, a, d, gMax)
 
     # Front right wing
     xc_f, xb_f, xt_f, nxt_f, xC_f, nC_f = \
@@ -482,35 +481,6 @@ def create_directories():
     f_and_m = base_dir / Path("f&m")
     if not f_and_m.exists():
         f_and_m.mkdir()
-
-
-def log_input(c, a, d, gMax):
-    # TODO: Print delta_, b_f, b_r
-    # TODO: Print nxb_f, nxc_f, nxb_r, nxc_r
-    # TODO: Print mpath
-    # TODO: Print phiT_, phiB_
-    # TODO: Print a_, beta_, f_
-    # TODO: Print gMax_, p, rtOff, tau, 
-    # TODO: Print U_
-    # TODO: Print nstep, dt
-
-    air = np.sqrt(np.sum(g.U_ ** 2))
-    # TODO: Print air speed
-    if air > 1.0E-03:
-        # Flapping/Air Seed Ratio
-        fk = 2 * g.f_ * g.d_ / air
-        # TODO: Print fk
-        # Pitch/Flapping Speed Ratio
-        r = 0.5 * ((0.5 * c + a) / d) * (g.p / g.t_) * (gMax / g.f_)
-        # TODO: Print r
-        # Pitch/Air Speed Ratio
-        k = fk * r
-        # TODO: Print k
-    else:
-        # Pitch/Flapping Speed Ratio
-        r = 0.5 * ((0.5 * c + a) / d) * (g.p / g.t_) * (gMax / g.f_)
-        # TODO: Print r
-
 
 
 if __name__ == "__main__":
