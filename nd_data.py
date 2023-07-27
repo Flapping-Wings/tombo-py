@@ -108,6 +108,8 @@ def nd_data(
         Total stroke length
     v_: ndarray
         Stroke velocity
+    rt: ndarray
+        TODO
     """
     # Wing span, chord, and border height
     l_ = np.array([l_f, l_f, l_r, l_r])
@@ -116,7 +118,7 @@ def nd_data(
 
     # Period
     T_ = 1.0 / g.f_
-    g.rt = T_[0] / T_
+    rt = T_[0] / T_
 
     # Convert angles to radians
     fac = np.pi / 180
@@ -157,4 +159,4 @@ def nd_data(
     U = U_ / v_[0]
 
     return l, c, h, phiT, phiB, a, beta, delta, gMax, U, Xb_f, Xc_f, Xb_r, Xc_r, \
-        b_f, b_r, e, d_, v_
+        b_f, b_r, e, d_, v_, rt

@@ -42,7 +42,7 @@ def tombo():
         symmetric_5_sided_mesh(2, g.lt_r, g.lr_r, g.bang_r, g.hfactor_r, g.wfactor_r)
 
     l, c, h, phiT, phiB, a, beta, delta, gMax, U, \
-        xb_f, xc_f, xb_r, xc_r, b_f, b_r, e, d_, v_ = \
+        xb_f, xc_f, xb_r, xc_r, b_f, b_r, e, d_, v_, rt = \
         nd_data(g.l_f, g.c_f, g.h_f, g.l_r, g.c_r, g.h_r,
                 g.phiT_, g.phiB_, g.a_, g.beta_, g.delta_, g.gMax_, g.U_,
                 g.xb_f, g.xc_f, g.xb_r, g.xc_r, g.b_f, g.b_r)
@@ -138,7 +138,7 @@ def tombo():
 
         for i in range(g.twing):
             phi[i], theta[i], dph[i], dth[i] = \
-                wing_m(g.mpath[i], t, g.rt[i], g.tau[i], e[i],
+                wing_m(g.mpath[i], t, rt[i], g.tau[i], e[i],
                        gMax[i], g.p[i], g.rtOff[i], phiT[i], phiB[i])
 
         # Get global coordinates of the points on the wing

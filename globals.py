@@ -248,8 +248,5 @@ limpw_r = None
 aimpw_r = None
 """Angular impulse from wake vortices (rear)"""
 
-rt = None
-"""TODO"""
-
 """Plot Variables Dictionary"""
 iterations = []
