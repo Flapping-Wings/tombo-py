@@ -150,10 +150,10 @@ def nd_data(
     e = e_ / d_
 
     # Reference time - use the time for the right front wing
-    g.t_ = T_[0] / 2.0
+    t_ = T_[0] / 2.0
 
     # Reference velocity - use the right front wing flapping velocity
-    v_ = d_ / g.t_
+    v_ = d_ / t_
 
     # Ambient velocity (nondimensional)
     U = U_ / v_[0]

@@ -47,8 +47,6 @@ idebg: bool = False
 # Time
 # ----
 
-t_: float = None
-"""Reference time"""
 dt: float = 0.1
 """Time increment"""
 nstep: int = 4
