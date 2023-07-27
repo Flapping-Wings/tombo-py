@@ -222,11 +222,6 @@ when the wind is calm
 
 RCUT: float = 1.0e-10
 """Distance between source and observation points to be judged as zero"""
-LCUT: float = None
-"""
-Cutoff distance of the extension of a vortex line; velocity evaluation points
-within this distance from the vortex line and/or its extension is set to zero
-"""
 
 # Impulse arrays
 # --------------

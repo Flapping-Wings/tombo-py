@@ -47,7 +47,9 @@ def tombo():
                 g.phiT_, g.phiB_, g.a_, g.beta_, g.delta_, g.gMax_, g.U_,
                 g.xb_f, g.xc_f, g.xb_r, g.xc_r, g.b_f, g.b_r)
 
-    g.LCUT = 0.1 * h[0]
+    # Cutoff distance of the extension of a vortex line; velocity evaluation points
+    # within this distance from the vortex line and/or its extension are set to zero
+    LCUT = 0.1 * h[0]
 
     check_input()
 
@@ -176,10 +178,10 @@ def tombo():
         for i in range(g.nwing):
             # Front wing
             Vncw_f[i, :] = n_vel_T_by_W(g.istep, nxt_f, XC_f[:, :, i], NC_f[:, :, i],
-                                        Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r, g.RCUT, g.LCUT)
+                                        Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
             # Rear wing  
             Vncw_r[i, :] = n_vel_T_by_W(g.istep, nxt_r, XC_r[:, :, i], NC_r[:, :, i],
-                                        Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r, g.RCUT, g.LCUT)
+                                        Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
 
         if g.idebg:
             print(f"Vncw {g.istep + 1}")
@@ -346,18 +348,18 @@ def tombo():
             print(np.allclose(VBTs_r, data['VBTs_r'], atol=1e-16))
 
         # Border element veocity due to the total wing elements: cross-influence
-        VBTs_12 = cross_vel_B_by_T(Xb_f[..., 0], g.nxb_f, Xt_f[..., 1], GAM_f[1, :], nxt_f, g.RCUT, g.LCUT)
-        VBTs_13 = cross_vel_B_by_T(Xb_f[..., 0], g.nxb_f, Xt_r[..., 0], GAM_r[0, :], nxt_r, g.RCUT, g.LCUT)
-        VBTs_14 = cross_vel_B_by_T(Xb_f[..., 0], g.nxb_f, Xt_r[..., 1], GAM_r[1, :], nxt_r, g.RCUT, g.LCUT)
-        VBTs_21 = cross_vel_B_by_T(Xb_f[..., 1], g.nxb_f, Xt_f[..., 0], GAM_f[0, :], nxt_f, g.RCUT, g.LCUT)
-        VBTs_23 = cross_vel_B_by_T(Xb_f[..., 1], g.nxb_f, Xt_r[..., 0], GAM_r[0, :], nxt_r, g.RCUT, g.LCUT)
-        VBTs_24 = cross_vel_B_by_T(Xb_f[..., 1], g.nxb_f, Xt_r[..., 1], GAM_r[1, :], nxt_r, g.RCUT, g.LCUT)
-        VBTs_31 = cross_vel_B_by_T(Xb_r[..., 0], g.nxb_r, Xt_f[..., 0], GAM_f[0, :], nxt_f, g.RCUT, g.LCUT)
-        VBTs_32 = cross_vel_B_by_T(Xb_r[..., 0], g.nxb_r, Xt_f[..., 1], GAM_f[1, :], nxt_f, g.RCUT, g.LCUT)
-        VBTs_34 = cross_vel_B_by_T(Xb_r[..., 0], g.nxb_r, Xt_r[..., 1], GAM_r[1, :], nxt_r, g.RCUT, g.LCUT)
-        VBTs_41 = cross_vel_B_by_T(Xb_r[..., 1], g.nxb_r, Xt_f[..., 0], GAM_f[0, :], nxt_f, g.RCUT, g.LCUT)
-        VBTs_42 = cross_vel_B_by_T(Xb_r[..., 1], g.nxb_r, Xt_f[..., 1], GAM_f[1, :], nxt_f, g.RCUT, g.LCUT)
-        VBTs_43 = cross_vel_B_by_T(Xb_r[..., 1], g.nxb_r, Xt_r[..., 0], GAM_r[0, :], nxt_r, g.RCUT, g.LCUT)
+        VBTs_12 = cross_vel_B_by_T(Xb_f[..., 0], g.nxb_f, Xt_f[..., 1], GAM_f[1, :], nxt_f, g.RCUT, LCUT)
+        VBTs_13 = cross_vel_B_by_T(Xb_f[..., 0], g.nxb_f, Xt_r[..., 0], GAM_r[0, :], nxt_r, g.RCUT, LCUT)
+        VBTs_14 = cross_vel_B_by_T(Xb_f[..., 0], g.nxb_f, Xt_r[..., 1], GAM_r[1, :], nxt_r, g.RCUT, LCUT)
+        VBTs_21 = cross_vel_B_by_T(Xb_f[..., 1], g.nxb_f, Xt_f[..., 0], GAM_f[0, :], nxt_f, g.RCUT, LCUT)
+        VBTs_23 = cross_vel_B_by_T(Xb_f[..., 1], g.nxb_f, Xt_r[..., 0], GAM_r[0, :], nxt_r, g.RCUT, LCUT)
+        VBTs_24 = cross_vel_B_by_T(Xb_f[..., 1], g.nxb_f, Xt_r[..., 1], GAM_r[1, :], nxt_r, g.RCUT, LCUT)
+        VBTs_31 = cross_vel_B_by_T(Xb_r[..., 0], g.nxb_r, Xt_f[..., 0], GAM_f[0, :], nxt_f, g.RCUT, LCUT)
+        VBTs_32 = cross_vel_B_by_T(Xb_r[..., 0], g.nxb_r, Xt_f[..., 1], GAM_f[1, :], nxt_f, g.RCUT, LCUT)
+        VBTs_34 = cross_vel_B_by_T(Xb_r[..., 0], g.nxb_r, Xt_r[..., 1], GAM_r[1, :], nxt_r, g.RCUT, LCUT)
+        VBTs_41 = cross_vel_B_by_T(Xb_r[..., 1], g.nxb_r, Xt_f[..., 0], GAM_f[0, :], nxt_f, g.RCUT, LCUT)
+        VBTs_42 = cross_vel_B_by_T(Xb_r[..., 1], g.nxb_r, Xt_f[..., 1], GAM_f[1, :], nxt_f, g.RCUT, LCUT)
+        VBTs_43 = cross_vel_B_by_T(Xb_r[..., 1], g.nxb_r, Xt_r[..., 0], GAM_r[0, :], nxt_r, g.RCUT, LCUT)
 
         # Assemble the total border element velocity due to two wings
         VBT_f, VBT_r = assemble_vel_B_by_T(g.nxb_f, VBTs_f, VBTs_12, VBTs_13, VBTs_14, VBTs_21, VBTs_23, VBTs_24,
@@ -373,23 +375,23 @@ def tombo():
             # Velocity of the border elements due to wake vortices
             for i in range(g.nwing):
                 VBW_f[:3, :4, :g.nxb_f, i] = vel_by(g.istep, Xb_f[..., i], g.nxb_f, Xw_f, GAMw_f, nxw_f, Xw_r,
-                                                    GAMw_r, nxw_r, g.RCUT, g.LCUT)
+                                                    GAMw_r, nxw_r, g.RCUT, LCUT)
                 VBW_r[:3, :4, :g.nxb_r, i] = vel_by(g.istep, Xb_r[..., i], g.nxb_r, Xw_f, GAMw_f, nxw_f, Xw_r,
-                                                    GAMw_r, nxw_r, g.RCUT, g.LCUT)
+                                                    GAMw_r, nxw_r, g.RCUT, LCUT)
 
             # Velocity of the wake elements due to total wing vortices
             for i in range(g.nwing):
                 VWT_f[:3, :4, :g.istep * g.nxb_f, i] = vel_by(g.istep, Xw_f[..., i], nxw_f, Xt_f, GAM_f, nxt_f,
-                                                              Xt_r, GAM_r, nxt_r, g.RCUT, g.LCUT)
+                                                              Xt_r, GAM_r, nxt_r, g.RCUT, LCUT)
                 VWT_r[:3, :4, :g.istep * g.nxb_r, i] = vel_by(g.istep, Xw_r[:, :, :, i], nxw_r, Xt_f, GAM_f, nxt_f,
-                                                              Xt_r, GAM_r, nxt_r, g.RCUT, g.LCUT)
+                                                              Xt_r, GAM_r, nxt_r, g.RCUT, LCUT)
 
             # Velocity of the wake elements due to wake elements
             for i in range(g.nwing):
                 VWW_f[:3, :4, :g.istep * g.nxb_f, i] = vel_by(g.istep, Xw_f[..., i], nxw_f, Xw_f, GAMw_f, nxw_f,
-                                                              Xw_r, GAMw_r, nxw_r, g.RCUT, g.LCUT)
+                                                              Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
                 VWW_r[:3, :4, :g.istep * g.nxb_r, i] = vel_by(g.istep, Xw_r[..., i], nxw_r, Xw_f, GAMw_f, nxw_f,
-                                                              Xw_r, GAMw_r, nxw_r, g.RCUT, g.LCUT)
+                                                              Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
 
         if g.idebg:
             print(f"VBW, VWT, VWW {g.istep + 1}:")
