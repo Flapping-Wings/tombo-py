@@ -42,7 +42,7 @@ def tombo():
         symmetric_5_sided_mesh(2, g.lt_r, g.lr_r, g.bang_r, g.hfactor_r, g.wfactor_r)
 
     l, c, h, phiT, phiB, a, beta, delta, gMax, U, \
-        xb_f, xc_f, xb_r, xc_r, b_f, b_r, e, d = \
+        xb_f, xc_f, xb_r, xc_r, b_f, b_r, e, d_ = \
         nd_data(g.l_f, g.c_f, g.h_f, g.l_r, g.c_r, g.h_r,
                 g.phiT_, g.phiB_, g.a_, g.beta_, g.delta_, g.gMax_, g.U_,
                 g.xb_f, g.xc_f, g.xb_r, g.xc_r, g.b_f, g.b_r)
@@ -438,7 +438,7 @@ def tombo():
 
     # Calculate the force and moment on the airfoil
     if g.nstep > 3:
-        force_moment(g.rho_, g.v_, g.d_[0], g.nstep, g.dt, U)
+        force_moment(g.rho_, g.v_, d_[0], g.nstep, g.dt, U)
 
     plot_graphs()
 

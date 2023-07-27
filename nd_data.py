@@ -104,8 +104,8 @@ def nd_data(
         Rear wing location (nondimensional)
     e: ndarray
         Difference between top and bottom stroke angles
-    d: float
-        Reference length TODO: clarify
+    d_: ndarray
+        Total stroke length
     """
     # Wing span, chord, and border height
     l_ = np.array([l_f, l_f, l_r, l_r])
@@ -128,32 +128,31 @@ def nd_data(
     # flight data of actual insect
     dT_ = l_ * phiT
     dB_ = l_ * -phiB
-    g.d_ = dT_ + dB_
+    d_ = dT_ + dB_
     e_ = dT_ - dB_
-    d = g.d_ / g.d_[0]      # d_[0] is the reference length
 
-    a = a_ / g.d_[0]
-    c = c_ / g.d_[0]
-    l = l_ / g.d_[0]
-    h = h_ / g.d_[0]
+    a = a_ / d_[0]
+    c = c_ / d_[0]
+    l = l_ / d_[0]
+    h = h_ / d_[0]
 
-    b_f = b_f / g.d_[0]
-    b_r = b_r / g.d_[0]
-    Xb_f = Xb_f / g.d_[0]
-    Xb_r = Xb_r / g.d_[0]
-    Xc_f = Xc_f / g.d_[0]
-    Xc_r = Xc_r / g.d_[0]
+    b_f = b_f / d_[0]
+    b_r = b_r / d_[0]
+    Xb_f = Xb_f / d_[0]
+    Xb_r = Xb_r / d_[0]
+    Xc_f = Xc_f / d_[0]
+    Xc_r = Xc_r / d_[0]
 
-    e = e_ / g.d_
+    e = e_ / d_
 
     # Reference time - use the time for the right front wing
     g.t_ = T_[0] / 2.0
 
     # Reference velocity - use the right front wing flapping velocity
-    g.v_ = g.d_[0] / g.t_
+    g.v_ = d_[0] / g.t_
 
     # Ambient velocity (nondimensional)
     U = U_ / g.v_
 
     return l, c, h, phiT, phiB, a, beta, delta, gMax, U, Xb_f, Xc_f, Xb_r, Xc_r, \
-        b_f, b_r, e, d
+        b_f, b_r, e, d_
