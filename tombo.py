@@ -21,7 +21,6 @@ from solution import solution
 from plot_GAM import plot_GAM
 from plot_WB import plot_WB
 from s_impulse_WT import s_impulse_WT
-from divide_GAM import divide_GAM
 from b_vel_B_by_T_matrix import b_vel_B_by_T_matrix
 from vel_B_by_T import vel_B_by_T
 from cross_vel_B_by_T import cross_vel_B_by_T
@@ -317,9 +316,9 @@ def tombo():
             print(np.allclose(data['limpw_r'], g.limpw_r, atol=1e-16))
             print(np.allclose(data['aimpw_r'], g.aimpw_r, atol=1e-16))
 
-        # Extract GAMAb (border & shed ) from GAM
-        GAMAb_f = divide_GAM(GAM_f, g.nxb_f)
-        GAMAb_r = divide_GAM(GAM_r, g.nxb_r)
+        # Extract GAMAb (border & shed) from GAM
+        GAMAb_f = GAM_f[:, :g.nxb_f].copy()
+        GAMAb_r = GAM_r[:, :g.nxb_r].copy()
 
         if g.idebg:
             print(f"GAMAb {g.istep + 1}:")
