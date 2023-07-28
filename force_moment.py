@@ -3,13 +3,48 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import splev, splrep, splder
 import globals as g
 
-def force_moment(rho_, v_, d_1, nstep, dt, U,
+def force_moment(rho_, v_, d_, nstep, dt, U,
                  limpa_f, limpa_r, aimpa_f, aimpa_r,
                  limpw_f, limpw_r, aimpw_f, aimpw_r
 ):
+    """
+    Calculate linear and angular forces and moments on the wing
+
+    Parameters
+    ----------
+    rho_: float
+        Air density
+    v_: float
+        Reference stroke veloctiy
+    d_: float
+        Reference stroke length
+    nstep: int
+        Number of time steps to iterate through
+    dt: float
+        Time increment
+    U: ndarray
+        Ambient velocity in (x, y, z); can be interpreted as the flight
+        velocity when the wind is calm (nondimensional)
+    limpa_f: ndarray[j, n, i]
+        Linear impulse from bound vortices (front)
+    limpa_r: ndarray[j, n, i]
+        Linear impulse from bound vortices (rear)
+    aimpa_f: ndarray[j, n, i]
+        Angular impulse from bound vortices (front)
+    aimpa_r: ndarray[j, n, i]
+        Angular impulse from bound vortices (rear)
+    limpw_f: ndarray[j, n, i]
+        Linear impulse from wake vortices (front)
+    limpw_r: ndarray[j, n, i]
+        Linear impulse from wake vortices (rear)
+    aimpw_f: ndarray[j, n, i]
+        Angular impulse from wake vortices (front)
+    aimpw_r: ndarray[j, n, i]
+        Angular impulse from wake vortices (rear)
+    """
     # Reference values of force and moment
-    f_ = rho_ * (v_ * d_1)**2
-    m_ = f_ * d_1
+    f_ = rho_ * (v_ * d_)**2
+    m_ = f_ * d_
 
     # Translational velocity of the moving inertia system
     U0 = -U
