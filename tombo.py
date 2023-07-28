@@ -1,9 +1,4 @@
 import numpy as np
-
-import matplotlib.pyplot as plt
-
-plt.ioff()
-
 from scipy.io import loadmat
 
 import globals as g
@@ -18,8 +13,6 @@ from n_vel_T_by_W import n_vel_T_by_W
 from cross_matrix import cross_matrix
 from assemble_matrix import assemble_matrix
 from solution import solution
-from plot_GAM import plot_GAM
-from plot_WB import plot_WB
 from s_impulse_WT import s_impulse_WT
 from b_vel_B_by_T_matrix import b_vel_B_by_T_matrix
 from vel_B_by_T import vel_B_by_T
