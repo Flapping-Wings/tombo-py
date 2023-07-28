@@ -44,34 +44,15 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
     h: float
         Height of border element
     """
-    g.itaper = bang_ != 90
+    is_tapered = bang_ != 90
 
     bang = np.pi * bang_ / 180.00
     l_ = lt_ * np.cos(bang) + lr_
     c_ = 2.0 * lt_ * np.sin(bang)
     h = c_ * hfactor
     
-    """
-    Center elements:
-    
-    If ielong is False, use the same # of border strips (n(i)) to create rectangular grid:
-        Tapered Section
-        - nCelmti = n[2] : # of major division in x-direction
-        - nCelmtj = n[0] : # of major division in y-direction
-        Rectangular Section
-        - nCelmri = n[2] : # of square elements in x-direction
-        - nCelmrj = n[1] : # of square elements in y-direction
-    If ielong is True, use n[2] to create rectangular grid
-        Tapered Section
-        - nCelmti = n[2] : # of major division in x-direction
-        - nCelmtj = n[2] : # of major division in y-direction
-        Rectangular Section
-        - nCelmri = n[2] : # of square elements in x-direction
-        - nCelmri = n[2] : # of square elements in y-direction
-    """
-
     Xb, nXb, Nb, Lt, Lr, C, n, wi_1 = WingBorder(lt_, lr_, bang, l_, c_, hfactor, wfactor)
-    Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1)
+    Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1, is_tapered)
 
     # Plot mesh
     # TODO: Refactor plotting
@@ -511,7 +492,7 @@ def uNormal(x, y, z):
 
     return uN
 
-def WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1):
+def WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1, is_tapered):
     """
     Create mesh for center region of the wing
 
@@ -556,7 +537,7 @@ def WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1):
     XcrS = np.empty([2, 4, n[2], n[1]])
     XcrR = np.empty([2, 4, n[1] * n[2]])
 
-    if g.itaper:
+    if is_tapered:
         # Tapered Region
         for ic in range(n[0]):
             for ir in range(n[2]):
@@ -573,7 +554,7 @@ def WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1):
             XcrS[:, 3, ir, ic] = Xcr[:, ir + 1, ic    ]
 
     # Rectangular and Polygon Mesh
-    if g.itaper:
+    if is_tapered:
         # Tapered Region - Triangular Apex Mesh w/ 4 Nodes
         i = 0
         ic = 0
@@ -610,7 +591,7 @@ def WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1):
     
     nXcrR = i
 
-    if g.itaper:
+    if is_tapered:
         # Total Center Rectangular Elements
         nXc = nXctR + nXcrR
         Xc = np.zeros((3, 5, nXc))

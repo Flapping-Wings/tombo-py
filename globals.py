@@ -40,21 +40,17 @@ gplot: bool = True
 """Toggle gamma plot"""
 wplot: bool = True
 """Toggle wake vortex plot"""
-idebg: bool = False
+idebg: bool = True
 """Toggle debug prints"""
 
 
 # Time
 # ----
 
-t_: float = None
-"""Reference time"""
 dt: float = 0.1
 """Time increment"""
 nstep: int = 4
 """Number of time steps to iterate through"""
-istep: int = 0
-"""Current iteration step"""
 
 
 # Body geometry
@@ -77,8 +73,6 @@ b_r: float = 1.5
 
 # General
 
-itaper: bool = None
-"""Toggle wing taper"""
 icamber: int = 0
 """
 Camber direction: 
@@ -91,11 +85,11 @@ acamber: float = 0.2
 
 hfactor_f: float = 0.1
 """Ratio of border element height to wing chord length (front)"""
-wfactor_f: float = 1
+wfactor_f: float = 3
 """Ratio of border element width to border element height (front)"""
 hfactor_r: float = 0.1
 """Ratio of border element height to wing chord length (rear)"""
-wfactor_r: float = 1
+wfactor_r: float = 3
 """Ratio of border element width to border element height (rear)"""
 
 lt_f: float = 2
@@ -116,56 +110,9 @@ ielong: bool  = False
 """Toggle fixed number of border elements"""
 
 
-# Front wing
-
-xb_f = None
-"""Border element coordinates (front)"""
-nxb_f = None
-"""Number of border elements (front)"""
-nb_f = None
-"""Unit normal to the border elements (front)"""
-xc_f = None
-"""Center element coordinates (front)"""
-nxc_f = None
-"""Number of center elements (front)"""
-nc_f = None
-"""Unit normal to the center elements (front)"""
-l_f = None
-"""Wing span (front)"""
-c_f = None
-"""Wing chord length (front)"""
-h_f = None
-"""Border height (front)"""
-
-# Rear wing
-
-xb_r = None
-"""Border element coordinates (rear)"""
-nxb_r = None
-"""Number of border elements (rear)"""
-nb_r = None
-"""Unit normal to the border elements (rear)"""
-xc_r = None
-"""Center element coordinates (rear)"""
-nxc_r = None
-"""Number of center elements (rear)"""
-nc_r = None
-"""Unit normal to the center elements (rear)"""
-l_r = None
-"""Wing span (rear)"""
-c_r = None
-"""Wing chord length (rear)"""
-h_r = None
-"""Border height (rear)"""
-
-
 # Wing motion
 # -----------
 
-v_: float = None
-"""Reference velocity"""
-d_: npt.NDArray[np.floating] = None
-"""Total stroke length"""
 phiT_: npt.NDArray[np.floating] = np.array([80.0, 80.0, 80.0, 80.0])
 """Top stroke angle in degrees"""
 phiB_: npt.NDArray[np.floating] = np.array([-45.0, -45.0, -45.0, -45.0])
@@ -226,34 +173,19 @@ when the wind is calm
 
 RCUT: float = 1.0e-10
 """Distance between source and observation points to be judged as zero"""
-LCUT: float = None
-"""
-Cutoff distance of the extension of a vortex line; velocity evaluation points
-within this distance from the vortex line and/or its extension is set to zero
-"""
 
-# Impulse arrays
-# --------------
-
-limpa_f = None
-"""Linear impulse from bound vortices (front)"""
-aimpa_f = None
-"""Angular impulse from bound vortices (front)"""
-limpw_f = None
-"""Linear impulse from wake vortices (front)"""
-aimpw_f = None
-"""Angular impulse from wake vortices (front)"""
-limpa_r = None
-"""Linear impulse from bound vortices (rear)"""
-aimpa_r = None
-"""Angular impulse from bound vortices (rear)"""
-limpw_r = None
-"""Linear impulse from wake vortices (rear)"""
-aimpw_r = None
-"""Angular impulse from wake vortices (rear)"""
-
-rt = None
-"""TODO"""
 
 """Plot Variables Dictionary"""
 iterations = []
+
+
+"""Check config values"""
+
+if np.any(p < 4):
+    raise ValueError("p must >=4 for all wings")
+
+if np.any(np.abs(rtOff) > 0.5):
+    raise ValueError("-0.5 <= rtOff <= 0.5 must be satisfied for all wings")
+
+if np.any((tau < 0) | (tau >= 2)):
+    raise ValueError("0 <= tau < 2 must be satisfied for all wings")
