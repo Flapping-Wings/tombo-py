@@ -126,14 +126,14 @@ def tombo():
     MVNs_f = lr_set_matrix(xt_f, nxt_f, xC_f, nC_f, g.RCUT)
     MVNs_r = lr_set_matrix(xt_r, nxt_r, xC_r, nC_r, g.RCUT)
 
-    for g.istep in range(g.nstep):
+    for istep in range(g.nstep):
 
         iteration = {}
         
         if g.idebg:
-            data = loadmat(f"matlab_data/data{g.istep + 1}.mat")
+            data = loadmat(f"matlab_data/data{istep + 1}.mat")
 
-        t = g.istep * g.dt
+        t = istep * g.dt
 
         # Get wing motion parameters
         phi = np.zeros(g.twing)
@@ -158,7 +158,7 @@ def tombo():
                              xc_r, xb_r, xt_r, xC_r, nC_r)
 
         if g.idebg:
-            print(f"Xc {g.istep + 1}")
+            print(f"Xc {istep + 1}")
             print(np.allclose(Xc_f, data['Xc_f'], atol=1e-16))
             print(np.allclose(Xc_r, data['Xc_r'], atol=1e-16))
 
@@ -172,7 +172,7 @@ def tombo():
                                        phi[i + 2], dph[i + 2], dth[i + 2], a[i + 2], beta[i + 2], U, iteration)
 
         if g.idebg:
-            print(f"Vnc {g.istep + 1}")
+            print(f"Vnc {istep + 1}")
             print(np.allclose(Vnc_f, data['Vnc_f'], atol=1e-16))
             print(np.allclose(Vnc_r, data['Vnc_r'], atol=1e-16))
 
@@ -180,14 +180,14 @@ def tombo():
         # For each wing, there are 4 wake vortex contributions
         for i in range(g.nwing):
             # Front wing
-            Vncw_f[i, :] = n_vel_T_by_W(g.istep, nxt_f, XC_f[:, :, i], NC_f[:, :, i],
+            Vncw_f[i, :] = n_vel_T_by_W(istep, nxt_f, XC_f[:, :, i], NC_f[:, :, i],
                                         Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
             # Rear wing  
-            Vncw_r[i, :] = n_vel_T_by_W(g.istep, nxt_r, XC_r[:, :, i], NC_r[:, :, i],
+            Vncw_r[i, :] = n_vel_T_by_W(istep, nxt_r, XC_r[:, :, i], NC_r[:, :, i],
                                         Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
 
         if g.idebg:
-            print(f"Vncw {g.istep + 1}")
+            print(f"Vncw {istep + 1}")
             print(np.allclose(Vncw_f, data['Vncw_f'], atol=1e-16))
             print(np.allclose(Vncw_r, data['Vncw_r'], atol=1e-16))
 
@@ -216,7 +216,7 @@ def tombo():
         GAMA = solution(nxt_f, nxt_r, MVN, Vnc_f, Vncw_f, Vnc_r, Vncw_r)
 
         if g.idebg:
-            print(f"MVN and GAMA {g.istep + 1}:")
+            print(f"MVN and GAMA {istep + 1}:")
             print(np.allclose(MVN, data['MVN'], atol=1e-16))
             print(np.allclose(GAMA, data['GAMA'], atol=1e-16))
 
@@ -260,7 +260,7 @@ def tombo():
         # Plot locations, Xb & Xw, of border & wake vortices (space-fixed sys)
         if g.wplot:
             iteration["wake"] = {
-                "istep": g.istep,
+                "istep": istep,
                 "nxb_f": nxb_f,
                 "nxw_f": nxw_f,
                 "Xb_f": np.copy(Xb_f),
@@ -270,7 +270,7 @@ def tombo():
                 "Xb_r": np.copy(Xb_r),
                 "Xw_r": np.copy(Xw_r)
             }
-            # plot_WB(g.istep, g.nxb_f, nxw_f, Xb_f, Xw_f, g.nxb_r, nxw_r, Xb_r, Xw_r)
+            # plot_WB(istep, g.nxb_f, nxw_f, Xb_f, Xw_f, g.nxb_r, nxw_r, Xb_r, Xw_r)
 
         if g.nstep > 3:  # At least 4 steps needed to calculate forces and moments
             # Calculate impulses in the body-translating system
@@ -278,27 +278,27 @@ def tombo():
             # For istep=1, there are no wake vortices
             # Front wing
             limpa, aimpa, limpw, aimpw = \
-                s_impulse_WT(g.istep, U, t, Xt_f, Xw_f, GAM_f, GAMw_f,
+                s_impulse_WT(istep, U, t, Xt_f, Xw_f, GAM_f, GAMw_f,
                              beta[0:2], phi[0:2], theta[0:2], a[0:2])
             for j in range(3):
                 for w in range(g.nwing):
-                    g.limpa_f[j, g.istep, w] = limpa[j, w]
-                    g.aimpa_f[j, g.istep, w] = aimpa[j, w]
-                    g.limpw_f[j, g.istep, w] = limpw[j, w]
-                    g.aimpw_f[j, g.istep, w] = aimpw[j, w]
+                    g.limpa_f[j, istep, w] = limpa[j, w]
+                    g.aimpa_f[j, istep, w] = aimpa[j, w]
+                    g.limpw_f[j, istep, w] = limpw[j, w]
+                    g.aimpw_f[j, istep, w] = aimpw[j, w]
             # Rear wing
             limpa, aimpa, limpw, aimpw = \
-                s_impulse_WT(g.istep, U, t, Xt_r, Xw_r, GAM_r, GAMw_r,
+                s_impulse_WT(istep, U, t, Xt_r, Xw_r, GAM_r, GAMw_r,
                              beta[2:4], phi[2:4], theta[2:4], a[2:4])
             for j in range(3):
                 for w in range(g.nwing):
-                    g.limpa_r[j, g.istep, w] = limpa[j, w]
-                    g.aimpa_r[j, g.istep, w] = aimpa[j, w]
-                    g.limpw_r[j, g.istep, w] = limpw[j, w]
-                    g.aimpw_r[j, g.istep, w] = aimpw[j, w]
+                    g.limpa_r[j, istep, w] = limpa[j, w]
+                    g.aimpa_r[j, istep, w] = aimpa[j, w]
+                    g.limpw_r[j, istep, w] = limpw[j, w]
+                    g.aimpw_r[j, istep, w] = aimpw[j, w]
 
         if g.idebg:
-            print(f"Impulse arrays {g.istep + 1}:")
+            print(f"Impulse arrays {istep + 1}:")
             print(np.allclose(data['limpa_f'], g.limpa_f, atol=1e-16))
             print(np.allclose(data['aimpa_f'], g.aimpa_f, atol=1e-16))
             print(np.allclose(data['limpw_f'], g.limpw_f, atol=1e-16))
@@ -313,7 +313,7 @@ def tombo():
         GAMAb_r = GAM_r[:, :nxb_r].copy()
 
         if g.idebg:
-            print(f"GAMAb {g.istep + 1}:")
+            print(f"GAMAb {istep + 1}:")
             print(np.allclose(GAMAb_f, data['GAMAb_f'], atol=1e-16))
             print(np.allclose(GAMAb_r, data['GAMAb_r'], atol=1e-16))
 
@@ -324,7 +324,7 @@ def tombo():
         cVBT_r = b_vel_B_by_T_matrix(nxb_r, nxt_r, Xb_r, Xt_r, g.RCUT)
 
         if g.idebg:
-            print(f"cVBT {g.istep + 1}:")
+            print(f"cVBT {istep + 1}:")
             print(np.allclose(cVBT_f, data['cVBT_f'], atol=1e-16))
             print(np.allclose(cVBT_r, data['cVBT_r'], atol=1e-16))
 
@@ -334,7 +334,7 @@ def tombo():
         VBTs_r = vel_B_by_T(cVBT_r, GAM_r, nxt_r)
 
         if g.idebg:
-            print(f"VBTs {g.istep + 1}:")
+            print(f"VBTs {istep + 1}:")
             print(np.allclose(VBTs_f, data['VBTs_f'], atol=1e-16))
             print(np.allclose(VBTs_r, data['VBTs_r'], atol=1e-16))
 
@@ -357,38 +357,38 @@ def tombo():
                                            nxb_r, VBTs_r, VBTs_31, VBTs_32, VBTs_34, VBTs_41, VBTs_42, VBTs_43)
 
         if g.idebg:
-            print(f"VBT {g.istep + 1}:")
+            print(f"VBT {istep + 1}:")
             print(np.allclose(VBT_f, data['VBT_f'], atol=1e-16))
             print(np.allclose(VBT_r, data['VBT_r'], atol=1e-16))
 
         # Velocity from wake vortices
-        if g.istep > 0:
+        if istep > 0:
             # Velocity of the border elements due to wake vortices
             for i in range(g.nwing):
-                VBW_f[..., i] = vel_by(g.istep, Xb_f[..., i], nxb_f, Xw_f, GAMw_f, nxw_f, Xw_r,
+                VBW_f[..., i] = vel_by(istep, Xb_f[..., i], nxb_f, Xw_f, GAMw_f, nxw_f, Xw_r,
                                                     GAMw_r, nxw_r, g.RCUT, LCUT)
-                VBW_r[..., i] = vel_by(g.istep, Xb_r[..., i], nxb_r, Xw_f, GAMw_f, nxw_f, Xw_r,
+                VBW_r[..., i] = vel_by(istep, Xb_r[..., i], nxb_r, Xw_f, GAMw_f, nxw_f, Xw_r,
                                                     GAMw_r, nxw_r, g.RCUT, LCUT)
 
             # Velocity of the wake elements due to total wing vortices
             for i in range(g.nwing):
-                VWT_f[..., :g.istep * nxb_f, i] = vel_by(g.istep, Xw_f[..., i], nxw_f, Xt_f, GAM_f, nxt_f,
+                VWT_f[..., :istep * nxb_f, i] = vel_by(istep, Xw_f[..., i], nxw_f, Xt_f, GAM_f, nxt_f,
                                                               Xt_r, GAM_r, nxt_r, g.RCUT, LCUT)
-                VWT_r[..., :g.istep * nxb_r, i] = vel_by(g.istep, Xw_r[:, :, :, i], nxw_r, Xt_f, GAM_f, nxt_f,
+                VWT_r[..., :istep * nxb_r, i] = vel_by(istep, Xw_r[:, :, :, i], nxw_r, Xt_f, GAM_f, nxt_f,
                                                               Xt_r, GAM_r, nxt_r, g.RCUT, LCUT)
 
             # Velocity of the wake elements due to wake elements
             for i in range(g.nwing):
-                VWW_f[..., :g.istep * nxb_f, i] = vel_by(g.istep, Xw_f[..., i], nxw_f, Xw_f, GAMw_f, nxw_f,
+                VWW_f[..., :istep * nxb_f, i] = vel_by(istep, Xw_f[..., i], nxw_f, Xw_f, GAMw_f, nxw_f,
                                                               Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
-                VWW_r[..., :g.istep * nxb_r, i] = vel_by(g.istep, Xw_r[..., i], nxw_r, Xw_f, GAMw_f, nxw_f,
+                VWW_r[..., :istep * nxb_r, i] = vel_by(istep, Xw_r[..., i], nxw_r, Xw_f, GAMw_f, nxw_f,
                                                               Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
 
         if g.idebg:
-            print(f"VBW, VWT, VWW {g.istep + 1}:")
+            print(f"VBW, VWT, VWW {istep + 1}:")
             print(np.allclose(VBW_f, data['VBW_f'], atol=1e-16))
             print(np.allclose(VBW_r, data['VBW_r'], atol=1e-16))
-            if g.istep > 0:
+            if istep > 0:
                 print(np.allclose(VWT_f[:, :, :nxw_f, :], data['VWT_f'], atol=1e-16))
                 print(np.allclose(VWT_r[:, :, :nxw_r, :], data['VWT_r'], atol=1e-16))
                 print(np.allclose(VWW_f[:, :, :nxw_f, :], data['VWW_f'], atol=1e-16))
@@ -399,12 +399,12 @@ def tombo():
         Xs_r = Xb_r + g.dt * (VBT_r + VBW_r)
 
         # Convect wake vortices
-        if g.istep > 0:
+        if istep > 0:
             Xw_f = Xw_f + g.dt * (VWT_f + VWW_f)
             Xw_r = Xw_r + g.dt * (VWT_r + VWW_r)
 
         # Add shed vortices to wake vortex
-        if g.istep == 0:
+        if istep == 0:
             # Front wings
             GAMw_f = GAMAb_f
             nxw_f = nxb_f
@@ -414,11 +414,11 @@ def tombo():
             nxw_r = nxb_r
             Xw_r[:, :, :nxb_r, :] = Xs_r
         else:
-            GAMw_f, nxw_f, Xw_f = add_wake(g.istep, nxb_f, GAMAb_f, Xs_f, GAMw_f, Xw_f)
-            GAMw_r, nxw_r, Xw_r = add_wake(g.istep, nxb_r, GAMAb_r, Xs_r, GAMw_r, Xw_r)
+            GAMw_f, nxw_f, Xw_f = add_wake(istep, nxb_f, GAMAb_f, Xs_f, GAMw_f, Xw_f)
+            GAMw_r, nxw_r, Xw_r = add_wake(istep, nxb_r, GAMAb_r, Xs_r, GAMw_r, Xw_r)
 
         if g.idebg:
-            print(f"End {g.istep + 1}:")
+            print(f"End {istep + 1}:")
             print(np.allclose(GAMw_f, data['GAMw_f'], atol=1e-16))
             print(np.allclose(nxw_f, data['nxw_f'], atol=1e-16))
             print(np.allclose(Xw_f[:, :, :nxw_f, :], data['Xw_f'], atol=1e-16))
