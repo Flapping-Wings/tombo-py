@@ -2,6 +2,7 @@ import numpy as np
 from scipy.io import loadmat
 
 import globals as g
+from plotting import create_directories
 from symmetric_5_sided_mesh import symmetric_5_sided_mesh
 from nd_data import nd_data
 from wing_total import wing_total
@@ -27,7 +28,7 @@ from plot_function import plot_graphs
 def tombo():
     # SETUP
     # -----
-    create_directories()
+    create_directories(g.data_folder)
 
     xb_f, nxb_f, nb_f, xc_f, nxc_f, nc_f, l_f, c_f, h_f = \
         symmetric_5_sided_mesh(1, g.lt_f, g.lr_f, g.bang_f, g.hfactor_f, g.wfactor_f)
@@ -429,30 +430,6 @@ def tombo():
                      limpw_f, limpw_r, aimpw_f, aimpw_r)
 
     plot_graphs()
-
-
-def create_directories():
-    from pathlib import Path
-
-    base_dir = Path(g.folder)
-    if not base_dir.exists():
-        base_dir.mkdir()
-
-    mesh_dir = base_dir / Path("mesh")
-    if not mesh_dir.exists():
-        mesh_dir.mkdir()
-
-    debug_dir = base_dir / Path("debug")
-    if not debug_dir.exists():
-        debug_dir.mkdir()
-
-    wake_dir = base_dir / Path("wake")
-    if not wake_dir.exists():
-        wake_dir.mkdir()
-
-    f_and_m = base_dir / Path("f&m")
-    if not f_and_m.exists():
-        f_and_m.mkdir()
 
 
 if __name__ == "__main__":
