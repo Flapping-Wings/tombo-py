@@ -53,11 +53,7 @@ def wing_total(Xb, nXb, Nb, Xc, nXc, Nc):
     NC[:, nXb:nXt] = Nc
 
     # Redefine Xb and Xc
-    tmp = Xb[:, 0:4, :]
-    Xb = np.zeros((3, 4, nXb))
-    Xb = tmp
-    tmp = Xc[:, 0:4, :]
-    Xc = np.zeros((3, 4, nXc))
-    Xc = tmp
+    Xb = Xb[:, 0:4, :]
+    Xc = Xc[:, 0:4, :]
 
     return Xc, Xb, Xt, nXt, XC, NC
