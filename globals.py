@@ -18,17 +18,13 @@ Linear equation solver:
 """
 
 
-# Output files
-# ------------
-
-folder: str = 'fig/'
-"""Path to output folder"""
-# fid = open(f"{folder}/output.txt", 'w')
-"""Output file"""
-
-
 # Plotting
 # --------
+
+data_folder: str = 'output/data/'
+"""Folder for data used for plotting"""
+plot_folder: str = 'output/plots/'
+"""Folder for generated plots"""
 
 iplot: bool = True
 """Toggle chord path plot"""
