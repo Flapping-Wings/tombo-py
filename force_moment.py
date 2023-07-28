@@ -3,7 +3,10 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import splev, splrep, splder
 import globals as g
 
-def force_moment(rho_, v_, d_1, nstep, dt, U):
+def force_moment(rho_, v_, d_1, nstep, dt, U,
+                 limpa_f, limpa_r, aimpa_f, aimpa_r,
+                 limpw_f, limpw_r, aimpw_f, aimpw_r
+):
     # Reference values of force and moment
     f_ = rho_ * (v_ * d_1)**2
     m_ = f_ * d_1
@@ -13,11 +16,11 @@ def force_moment(rho_, v_, d_1, nstep, dt, U):
 
     # Combine impulses
     # Front wings
-    limps_f = g.limpa_f + g.limpw_f
-    aimps_f = g.aimpa_f + g.aimpw_f
+    limps_f = limpa_f + limpw_f
+    aimps_f = aimpa_f + aimpw_f
     # Rear wings
-    limps_r = g.limpa_r + g.limpw_r
-    aimps_r = g.aimpa_r + g.aimpw_r
+    limps_r = limpa_r + limpw_r
+    aimps_r = aimpa_r + aimpw_r
 
     # Add contributions from nwing/2 wings
     # Front wings

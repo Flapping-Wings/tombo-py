@@ -78,14 +78,14 @@ def tombo():
 
     if g.nstep > 3:
         # Initialize the linear and angular impulse arrays
-        g.limpa_f = np.zeros((3, g.nstep, g.nwing))
-        g.limpa_r = np.zeros((3, g.nstep, g.nwing))
-        g.aimpa_f = np.zeros((3, g.nstep, g.nwing))
-        g.aimpa_r = np.zeros((3, g.nstep, g.nwing))
-        g.limpw_f = np.zeros((3, g.nstep, g.nwing))
-        g.limpw_r = np.zeros((3, g.nstep, g.nwing))
-        g.aimpw_f = np.zeros((3, g.nstep, g.nwing))
-        g.aimpw_r = np.zeros((3, g.nstep, g.nwing))
+        limpa_f = np.zeros((3, g.nstep, g.nwing))
+        limpa_r = np.zeros((3, g.nstep, g.nwing))
+        aimpa_f = np.zeros((3, g.nstep, g.nwing))
+        aimpa_r = np.zeros((3, g.nstep, g.nwing))
+        limpw_f = np.zeros((3, g.nstep, g.nwing))
+        limpw_r = np.zeros((3, g.nstep, g.nwing))
+        aimpw_f = np.zeros((3, g.nstep, g.nwing))
+        aimpw_r = np.zeros((3, g.nstep, g.nwing))
 
     # Normal velocity on the wing due to the wing motion & wake vortices
     Vnc_f = np.zeros((g.nwing, nxt_f))
@@ -282,31 +282,31 @@ def tombo():
                              beta[0:2], phi[0:2], theta[0:2], a[0:2])
             for j in range(3):
                 for w in range(g.nwing):
-                    g.limpa_f[j, istep, w] = limpa[j, w]
-                    g.aimpa_f[j, istep, w] = aimpa[j, w]
-                    g.limpw_f[j, istep, w] = limpw[j, w]
-                    g.aimpw_f[j, istep, w] = aimpw[j, w]
+                    limpa_f[j, istep, w] = limpa[j, w]
+                    aimpa_f[j, istep, w] = aimpa[j, w]
+                    limpw_f[j, istep, w] = limpw[j, w]
+                    aimpw_f[j, istep, w] = aimpw[j, w]
             # Rear wing
             limpa, aimpa, limpw, aimpw = \
                 s_impulse_WT(istep, U, t, Xt_r, Xw_r, GAM_r, GAMw_r,
                              beta[2:4], phi[2:4], theta[2:4], a[2:4])
             for j in range(3):
                 for w in range(g.nwing):
-                    g.limpa_r[j, istep, w] = limpa[j, w]
-                    g.aimpa_r[j, istep, w] = aimpa[j, w]
-                    g.limpw_r[j, istep, w] = limpw[j, w]
-                    g.aimpw_r[j, istep, w] = aimpw[j, w]
+                    limpa_r[j, istep, w] = limpa[j, w]
+                    aimpa_r[j, istep, w] = aimpa[j, w]
+                    limpw_r[j, istep, w] = limpw[j, w]
+                    aimpw_r[j, istep, w] = aimpw[j, w]
 
         if g.idebg:
             print(f"Impulse arrays {istep + 1}:")
-            print(np.allclose(data['limpa_f'], g.limpa_f, atol=1e-16))
-            print(np.allclose(data['aimpa_f'], g.aimpa_f, atol=1e-16))
-            print(np.allclose(data['limpw_f'], g.limpw_f, atol=1e-16))
-            print(np.allclose(data['aimpw_f'], g.aimpw_f, atol=1e-16))
-            print(np.allclose(data['limpa_r'], g.limpa_r, atol=1e-16))
-            print(np.allclose(data['aimpa_r'], g.aimpa_r, atol=1e-16))
-            print(np.allclose(data['limpw_r'], g.limpw_r, atol=1e-16))
-            print(np.allclose(data['aimpw_r'], g.aimpw_r, atol=1e-16))
+            print(np.allclose(data['limpa_f'], limpa_f, atol=1e-16))
+            print(np.allclose(data['aimpa_f'], aimpa_f, atol=1e-16))
+            print(np.allclose(data['limpw_f'], limpw_f, atol=1e-16))
+            print(np.allclose(data['aimpw_f'], aimpw_f, atol=1e-16))
+            print(np.allclose(data['limpa_r'], limpa_r, atol=1e-16))
+            print(np.allclose(data['aimpa_r'], aimpa_r, atol=1e-16))
+            print(np.allclose(data['limpw_r'], limpw_r, atol=1e-16))
+            print(np.allclose(data['aimpw_r'], aimpw_r, atol=1e-16))
 
         # Extract GAMAb (border & shed) from GAM
         GAMAb_f = GAM_f[:, :nxb_f].copy()
@@ -431,7 +431,9 @@ def tombo():
 
     # Calculate the force and moment on the airfoil
     if g.nstep > 3:
-        force_moment(g.rho_, v_[0], d_[0], g.nstep, g.dt, U)
+        force_moment(g.rho_, v_[0], d_[0], g.nstep, g.dt, U,
+                     limpa_f, limpa_r, aimpa_f, aimpa_r,
+                     limpw_f, limpw_r, aimpw_f, aimpw_r)
 
     plot_graphs()
 

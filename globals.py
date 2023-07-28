@@ -174,25 +174,6 @@ when the wind is calm
 RCUT: float = 1.0e-10
 """Distance between source and observation points to be judged as zero"""
 
-# Impulse arrays
-# --------------
-
-limpa_f = None
-"""Linear impulse from bound vortices (front)"""
-aimpa_f = None
-"""Angular impulse from bound vortices (front)"""
-limpw_f = None
-"""Linear impulse from wake vortices (front)"""
-aimpw_f = None
-"""Angular impulse from wake vortices (front)"""
-limpa_r = None
-"""Linear impulse from bound vortices (rear)"""
-aimpa_r = None
-"""Angular impulse from bound vortices (rear)"""
-limpw_r = None
-"""Linear impulse from wake vortices (rear)"""
-aimpw_r = None
-"""Angular impulse from wake vortices (rear)"""
 
 """Plot Variables Dictionary"""
 iterations = []
