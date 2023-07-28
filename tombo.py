@@ -438,13 +438,6 @@ def tombo():
     plot_graphs()
 
 
-def check_input(b_f, b_r, c_f, c_r, p, rtOff, tau):
-    if g.b_r - g.b_f >= 0.5 * (c_r + c_f):
-        print("wing clearance checked")
-    else:
-        raise ValueError("rear and forward wings interfere")
-
-
 def create_directories():
     from pathlib import Path
 
