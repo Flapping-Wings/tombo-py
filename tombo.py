@@ -223,33 +223,14 @@ def tombo():
         GAM_r[0, 0:nxt_r] = GAMA[(2 * nxt_f):(2 * nxt_f + nxt_r)]  # Rear right wing
         GAM_r[1, 0:nxt_r] = GAMA[(2 * nxt_f + nxt_r):(2 * nxt_f + 2 * nxt_r)]  # Rear left  wing
 
-        # Plot GAMA at the collocation points of the elements
-        # using the unit normal direction: positive up and negative down
-        if g.gplot:
-            for i in range(g.nwing):
-                # Front wing
-
-                iteration["GAM_front"] = {
-                    "i": i,
-                    "t": t,
-                    "GAM_f": np.copy(GAM_f[i,:]),
-                    "XC_f": np.copy(XC_f[:,:,i]),
-                    "NC_f": np.copy(NC_f[:,:,i])
-                }
-                
-                # plot_GAM(0, i, t, GAM_f[i,:], XC_f[:,:,i], NC_f[:,:,i])
-
-                # Rear wing
-
-                iteration["GAM_rear"] = {
-                    "i": i,
-                    "t": t,
-                    "GAM_r": np.copy(GAM_r[i,:]),
-                    "XC_r": np.copy(XC_r[:,:,i]),
-                    "NC_r": np.copy(NC_r[:,:,i])
-                }
-                
-                # plot_GAM(1, i, t, GAM_r[i,:], XC_r[:,:,i], NC_r[:,:,i])
+        # Save data for plotting GAMA
+        for i in range(g.nwing):
+            np.savez(f'{g.data_folder}/GAMA/GAMA_{g.labels[0][i]}_{t:.4f}',
+                        GAMA=GAM_f[i], XC=XC_f[..., i], NC=NC_f[..., i],
+                        m=0, iwing=i, t=t)
+            np.savez(f'{g.data_folder}/GAMA/GAMA_{g.labels[1][i]}_{t:.4f}',
+                        GAMA=GAM_r[i], XC=XC_r[..., i], NC=NC_r[..., i],
+                        m=1, iwing=i, t=t)
 
         # Plot locations, Xb & Xw, of border & wake vortices (space-fixed sys)
         if g.wplot:
