@@ -21,9 +21,9 @@ Linear equation solver:
 # Plotting
 # --------
 
-data_folder: str = 'output/data/'
+data_folder: str = 'output/data'
 """Folder for data used for plotting"""
-plot_folder: str = 'output/plots/'
+plot_folder: str = 'output/plots'
 """Folder for generated plots"""
 
 iplot: bool = True
