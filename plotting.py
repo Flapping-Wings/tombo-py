@@ -117,6 +117,42 @@ def plot_mesh_3D_helper(ax, X, nX, N):
         ax.plot(Nline[:, 0], Nline[:, 1], Nline[:, 2], color='r') 
 
 
+def plot_airfoil_vel(XC, Vnc, NC, m, iwing, t, *, save=False):
+    # End points for the normal velocity vector
+    sf = 0.1    # Scale factor for the velocity plot
+    xaif = XC[0,:]
+    yaif = XC[1,:]
+    zaif = XC[2,:]
+    
+    xtip = xaif + sf * Vnc * NC[0,:]
+    ytip = yaif + sf * Vnc * NC[1,:]
+    ztip = zaif + sf * Vnc * NC[2,:]
+    
+    # Plot normal velocity vectors at collocation points     
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+
+    for i in range(len(xtip)):
+      ax.plot([xaif[i], xtip[i]], [yaif[i], ytip[i]], [zaif[i], ztip[i]])
+
+    ax.scatter(XC[0, :], XC[1, :], XC[2, :], marker='o')
+
+    ax.set_title('Normal velocity vectors at collocation points')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+    ax.set_box_aspect([1, 1, 1])
+    ax.axis('equal')
+
+    if save:
+        labels = [['fr', 'fl'], ['rr', 'rl']]
+
+        plt.savefig(f'{g.plot_folder}/airfoil_vel/airfoil_vel_{labels[m][iwing]}_{t:.4f}.png')
+        plt.close(fig)
+    else:
+        plt.show()
+
+
 def dummy():
     pass
 
@@ -124,7 +160,7 @@ def dummy():
 plotting_funcs = {
     'mesh2d': plot_mesh_2D,
     'mesh3d': plot_mesh_3D,
-    'airfoil_vel': dummy,
+    'airfoil_vel': plot_airfoil_vel,
     'GAMA': dummy,
     'wake': dummy,
     'force': dummy,
@@ -143,8 +179,8 @@ def create_directories(base_path):
 def plot():
     create_directories(g.plot_folder)
 
-    with np.load(f'{g.data_folder}/mesh3d/mesh3d_f.npz') as data:
-        plotting_funcs['mesh3d'](*data.values(), save=True)
+    with np.load(f'{g.data_folder}/airfoil_vel/airfoil_vel_rl_0.0000.npz') as data:
+        plotting_funcs['airfoil_vel'](*data.values(), save=False)
 
 
 if __name__ == '__main__':
