@@ -69,6 +69,6 @@ def lrs_wing_NVs(m, iwing, xC, XC, NC, t, theta, phi, dph, dth, a, beta, U, iter
     labels = [['fr', 'fl'], ['rr', 'rl']]
 
     np.savez(f'{g.data_folder}/airfoil_vel/airfoil_vel_{labels[m][iwing]}_{t:.4f}',
-             XC=XC, Vnc=Vnc, NC=NC, m=m, iwing=iwing, t=t)
+             Vnc=Vnc, XC=XC, NC=NC, m=m, iwing=iwing, t=t)
     
     return Vnc
