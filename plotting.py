@@ -165,6 +165,68 @@ def plot_velocity(ax, scale_factor, vel, XC, NC):
     ax.set_box_aspect([1, 1, 1])
     ax.axis('equal')
 
+def plot_wake(istep, nXb_f, nXw_f, Xb_f, Xw_f, nXb_r, nXw_r, Xb_r, Xw_r, *, save=False):
+    """
+    Plot  wake elements along with the original border elements
+    
+    Parameters
+    ----------
+    istep: int
+        Iteration step
+    nXb_f: int
+        Number of border vortices (front)
+    nXw_f: int
+        Number of wake vortices (front)
+    Xb_f: ndarray[j, inode, iXb, w]
+        Coordinate j of node point for the border iXb (front)
+    Xw_f: ndarray[j, inode, iXw, w]
+        Coordinate j of node point for wake element iXb (front)
+    nXb_r: int
+        Number of border vortices (rear)
+    nXw_r: int
+        Number of wake vortices (rear)
+    Xb_r: ndarray[j, inode, iXb, w]
+        Coordinate j of node point for the border iXb (rear)
+    Xw_r: ndarray[j, inode, iXw, w]
+        Coordinate j of node point for wake element iXb (rear)
+    """
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+
+    plot_wing_set(ax, nXb_f, nXw_f, Xb_f, Xw_f)
+    plot_wing_set(ax, nXb_r, nXw_r, Xb_r, Xw_r)
+    ax.axis('equal')
+
+    if save:      
+        plt.savefig(f'{g.plot_folder}/wake/wake_{istep}.png')
+        plt.close(fig)
+    else:
+        plt.show()
+
+def plot_wing_set(ax, nXb, nXw, Xb, Xw):
+    """Helper for `plot_wake`"""
+    # Original border elements
+    for w in range(g.nwing):
+        for i in range(nXb):
+            x = [Xb[0,0,i,w], Xb[0,1,i,w], Xb[0,2,i,w], Xb[0,3,i,w], Xb[0,0,i,w]]
+            y = [Xb[1,0,i,w], Xb[1,1,i,w], Xb[1,2,i,w], Xb[1,3,i,w], Xb[1,0,i,w]]
+            z = [Xb[2,0,i,w], Xb[2,1,i,w], Xb[2,2,i,w], Xb[2,3,i,w], Xb[2,0,i,w]]
+
+            ax.plot(x, y, z, 'r')
+    
+    # Wake elements
+    for w in range(g.nwing):
+        for i in range(nXw):
+            x = [Xw[0,0,i,w], Xw[0,1,i,w], Xw[0,2,i,w], Xw[0,3,i,w], Xw[0,0,i,w]]
+            y = [Xw[1,0,i,w], Xw[1,1,i,w], Xw[1,2,i,w], Xw[1,3,i,w], Xw[1,0,i,w]]
+            z = [Xw[2,0,i,w], Xw[2,1,i,w], Xw[2,2,i,w], Xw[2,3,i,w], Xw[2,0,i,w]]
+
+            if w == 0:
+                ax.plot(x, y, z, 'k')
+            else:
+                ax.plot(x, y, z, 'b')
+
+
 def dummy():
     pass
 
@@ -174,7 +236,7 @@ plotting_funcs = {
     'mesh3d': plot_mesh_3D,
     'airfoil_vel': plot_airfoil_vel,
     'GAMA': plot_GAMA,
-    'wake': dummy,
+    'wake': plot_wake,
     'force': dummy,
     'moment': dummy
 }
@@ -194,8 +256,11 @@ def plot():
     # with np.load(f'{g.data_folder}/airfoil_vel/airfoil_vel_rl_0.0000.npz') as data:
     #     plotting_funcs['airfoil_vel'](*data.values(), save=False)
 
-    with np.load(f'{g.data_folder}/GAMA/GAMA_rl_0.0000.npz') as data:
-        plotting_funcs['GAMA'](*data.values(), save=False)
+    # with np.load(f'{g.data_folder}/GAMA/GAMA_rl_0.0000.npz') as data:
+    #     plotting_funcs['GAMA'](*data.values(), save=False)
+
+    with np.load(f'{g.data_folder}/wake/wake_0.npz') as data:
+        plotting_funcs['wake'](*data.values(), save=False)
 
 
 if __name__ == '__main__':
