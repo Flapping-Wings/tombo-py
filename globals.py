@@ -25,6 +25,14 @@ data_folder: str = 'output/data'
 """Folder for data used for plotting"""
 plot_folder: str = 'output/plots'
 """Folder for generated plots"""
+labels: list = [['fr', 'fl'], ['rr', 'rl']]
+"""
+Labels used in filenames
+- 'fr': front right
+- 'fl': front left
+- 'rr': rear right
+- 'rl': rear left
+"""
 
 iplot: bool = True
 """Toggle chord path plot"""
