@@ -232,20 +232,10 @@ def tombo():
                         GAMA=GAM_r[i], XC=XC_r[..., i], NC=NC_r[..., i],
                         m=1, iwing=i, t=t)
 
-        # Plot locations, Xb & Xw, of border & wake vortices (space-fixed sys)
-        if g.wplot:
-            iteration["wake"] = {
-                "istep": istep,
-                "nxb_f": nxb_f,
-                "nxw_f": nxw_f,
-                "Xb_f": np.copy(Xb_f),
-                "Xw_f": np.copy(Xw_f),
-                "nxb_r": nxb_r,
-                "nxw_r": nxw_r,
-                "Xb_r": np.copy(Xb_r),
-                "Xw_r": np.copy(Xw_r)
-            }
-            # plot_WB(istep, g.nxb_f, nxw_f, Xb_f, Xw_f, g.nxb_r, nxw_r, Xb_r, Xw_r)
+        # Save data for plotting wakes
+        np.savez(f'{g.data_folder}/wake/wake_{istep}', istep=istep,
+                    nXb_f=nxb_f, nXw_f=nxw_f, Xb_f=Xb_f, Xw_f=Xw_f,
+                    nXb_r=nxb_r, nXw_r=nxw_r, Xb_r=Xb_r, Xw_r=Xw_r)
 
         if g.nstep > 3:  # At least 4 steps needed to calculate forces and moments
             # Calculate impulses in the body-translating system
