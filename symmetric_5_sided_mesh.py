@@ -2,7 +2,7 @@ import numpy as np
 import globals as g
 import matplotlib.pyplot as plt
 
-def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
+def symmetric_5_sided_mesh(wing, lt_, lr_, bang_, hfactor, wfactor):
     """
     Create a symmetric, 5-sided wing mesh
 
@@ -10,8 +10,8 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
 
     Parameters
     ----------
-    W: int 
-        1 (forward wing), 2 (rear wing)
+    wing: str 
+        'f' for front wing, or 'r' for rear wing
     lt_: float
         Length of tapered section of the wing in cm
     lr_: float
@@ -60,14 +60,14 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
         fig2, ax2 = plt.subplots()
         plot2Elem(fig2, ax2, Xb, nXb, 4, 'r', 2)
         plot2Elem(fig2, ax2, Xc, nXc, 4, 'b', 2)
-        fig2.savefig(f"{g.folder}mesh/2dmesh_{W}.png")
+        fig2.savefig(f"{g.folder}mesh/2dmesh_{wing}.png")
         plt.close()
 
         fig3 = plt.figure()
         ax3 = fig3.add_subplot(projection='3d')
         plot3Elem(fig3, ax3, Xb, nXb, Nb)
         plot3Elem(fig3, ax3, Xc, nXc, Nc)
-        fig3.savefig(f"{g.folder}mesh/3dmesh_{W}.png")
+        fig3.savefig(f"{g.folder}mesh/3dmesh_{wing}.png")
         plt.close()
         
     return Xb, nXb, Nb, Xc, nXc, Nc, l_, c_, h
