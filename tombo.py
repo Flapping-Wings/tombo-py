@@ -231,7 +231,7 @@ def tombo():
                         GAMA=GAM_r[i], XC=XC_r[..., i], NC=NC_r[..., i])
 
         # Save data for plotting wakes
-        np.savez(f'{g.data_folder}/wake/wake_{istep}', istep=istep,
+        np.savez(f'{g.data_folder}/wake/wake_{istep}',
                     nXb_f=nxb_f, nXw_f=nxw_f, Xb_f=Xb_f, Xw_f=Xw_f,
                     nXb_r=nxb_r, nXw_r=nxw_r, Xb_r=Xb_r, Xw_r=Xw_r)
 

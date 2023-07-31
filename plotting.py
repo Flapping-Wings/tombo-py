@@ -128,6 +128,11 @@ def plot_airfoil_vel(Vnc, XC, NC, *, filename, save):
         Collocation points (global)
     NC[j, i]
         Unit normals at collocation points (global)
+    filename: str
+        Filename (stem) of saved plot
+    save: bool
+        If `True`, save plot as a png.
+        If `False`, open plot in interactive viewer.
     """
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
@@ -154,6 +159,11 @@ def plot_GAMA(GAMA, XC, NC, *, filename, save):
         Collocation points (global)
     NC[j, i]
         Unit normals at collocation points (global)
+    filename: str
+        Filename (stem) of saved plot
+    save: bool
+        If `True`, save plot as a png.
+        If `False`, open plot in interactive viewer.
     """
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
@@ -190,14 +200,12 @@ def plot_velocity(ax, scale_factor, vel, XC, NC):
     ax.set_box_aspect([1, 1, 1])
     ax.axis('equal')
 
-def plot_wake(istep, nXb_f, nXw_f, Xb_f, Xw_f, nXb_r, nXw_r, Xb_r, Xw_r, *, save=False):
+def plot_wake(nXb_f, nXw_f, Xb_f, Xw_f, nXb_r, nXw_r, Xb_r, Xw_r, *, filename, save):
     """
     Plot  wake elements along with the original border elements
     
     Parameters
     ----------
-    istep: int
-        Iteration step
     nXb_f: int
         Number of border vortices (front)
     nXw_f: int
@@ -214,6 +222,11 @@ def plot_wake(istep, nXb_f, nXw_f, Xb_f, Xw_f, nXb_r, nXw_r, Xb_r, Xw_r, *, save
         Coordinate j of node point for the border iXb (rear)
     Xw_r: ndarray[j, inode, iXw, w]
         Coordinate j of node point for wake element iXb (rear)
+    filename: str
+        Filename (stem) of saved plot
+    save: bool
+        If `True`, save plot as a png.
+        If `False`, open plot in interactive viewer.
     """
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
@@ -223,7 +236,7 @@ def plot_wake(istep, nXb_f, nXw_f, Xb_f, Xw_f, nXb_r, nXw_r, Xb_r, Xw_r, *, save
     ax.axis('equal')
 
     if save:      
-        plt.savefig(f'{g.plot_folder}/wake/wake_{istep}.png')
+        plt.savefig(f'{g.plot_folder}/wake/{filename}.png')
         plt.close(fig)
     else:
         plt.show()
@@ -318,7 +331,7 @@ def plot():
     #     plotting_funcs['GAMA'](*data.values(), filename='GAMA_rl_0.0000', save=True)
 
     # with np.load(f'{g.data_folder}/wake/wake_0.npz') as data:
-    #     plotting_funcs['wake'](*data.values(), save=False)
+    #     plotting_funcs['wake'](*data.values(), filename='wake_0', save=True)
 
     # with np.load(f'{g.data_folder}/force/force_z.npz') as data:
     #     plotting_funcs['force'](*data.values(), save=False)
