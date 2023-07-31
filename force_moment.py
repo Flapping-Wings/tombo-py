@@ -112,24 +112,13 @@ def force_moment(rho_, v_, d_, nstep, dt, U,
     momenty = -m_ * momenty
     momentz = -m_ * momentz
 
-    # Plot forces and moments
-    fm = plt.figure()
-    plt.plot(times, forcex, 'x-k')
-    plt.grid(True)
-    plt.savefig(g.folder + 'f&m/fx.png')
-    plt.close(fm)
-
-    fm = plt.figure()
-    plt.plot(times, forcey, '+-k')
-    plt.grid(True)
-    plt.savefig(g.folder + 'f&m/fy.png')
-    plt.close(fm)
-
-    fm = plt.figure()
-    plt.plot(times, forcez, 'x-k')
-    plt.grid(True)
-    plt.savefig(g.folder + 'f&m/fz.png')
-    plt.close(fm)
+    # Save data for plotting forces
+    np.savez(f'{g.data_folder}/force/force_x',
+             times=times, force=forcex)
+    np.savez(f'{g.data_folder}/force/force_y',
+             times=times, force=forcey)
+    np.savez(f'{g.data_folder}/force/force_z',
+             times=times, force=forcez)
 
     fm = plt.figure()
     plt.plot(times, momentx, 'o-r')
