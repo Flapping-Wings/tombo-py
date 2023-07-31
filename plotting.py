@@ -264,31 +264,47 @@ def plot_wing_set(ax, nXb, nXw, Xb, Xw):
             else:
                 ax.plot(x, y, z, 'b')
 
-def plot_force(times, force, *, save=False):
+def plot_force(times, force, *, filename, save):
+    """
+    Plot force on the wings throughout the simulation
+
+    Parameters
+    ----------
+    times: ndarray
+        Points in time that were simulated
+    force: ndarray
+        Force on the wings at each corresponding point in time    
+    """
     fig = plt.figure()
     plt.plot(times, force, 'x-k')
     plt.grid(True)
 
     if save:
-        plt.savefig(f'{g.plot_folder}/force/force_y') # TODO fix filename
+        plt.savefig(f'{g.plot_folder}/force/{filename}.png')
         plt.close(fig)
     else:
         plt.show()
 
-def plot_moment(times, moment, *, save=False):
+def plot_moment(times, moment, *, filename, save):
+    """
+    Plot moment on the wings throughout the simulation
+
+    Parameters
+    ----------
+    times: ndarray
+        Points in time that were simulated
+    moment: ndarray
+        Moment on the wings at each corresponding point in time    
+    """
     fig = plt.figure()
     plt.plot(times, moment, 'o-r')
     plt.grid(True)
 
     if save:
-        plt.savefig(f'{g.plot_folder}/force/force_y') # TODO fix filename
+        plt.savefig(f'{g.plot_folder}/moment/{filename}.png')
         plt.close(fig)
     else:
         plt.show()
-
-
-def dummy():
-    pass
 
 # Relate each plot type to its corresponding function
 plotting_funcs = {
@@ -334,10 +350,10 @@ def plot():
     #     plotting_funcs['wake'](*data.values(), filename='wake_0', save=True)
 
     # with np.load(f'{g.data_folder}/force/force_z.npz') as data:
-    #     plotting_funcs['force'](*data.values(), save=False)
+    #     plotting_funcs['force'](*data.values(), filename='force_z', save=True)
 
-    # with np.load(f'{g.data_folder}/moment/moment_y.npz') as data:
-    #     plotting_funcs['moment'](*data.values(), save=False)
+    # with np.load(f'{g.data_folder}/moment/moment_z.npz') as data:
+    #     plotting_funcs['moment'](*data.values(), filename='moment_z', save=True)
     pass
 
 def main():
