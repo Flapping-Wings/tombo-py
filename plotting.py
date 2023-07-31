@@ -13,8 +13,6 @@ def plot_mesh_2D(Xb, nXb, Xc, nXc, npoly=4, *, filename, save):
 
     Parameters
     ----------
-    wing: str
-        'f' for front wing, or 'r' for rear wing
     Xb: ndarray[j, n, i]
         Border element coordinates
     nXb: int
@@ -59,14 +57,12 @@ def plot_mesh_2D_helper(ax, X, nX, npoly, color):
         ax.plot(x, y, color, linewidth=2)
         ax.plot(cx, cy, 'o')
 
-def plot_mesh_3D(wing, Xb, nXb, Nb, Xc, nXc, Nc, *, save=False):
+def plot_mesh_3D(Xb, nXb, Nb, Xc, nXc, Nc, *, filename, save):
     """
     Plot 3D view of wing mesh
 
     Parameters
     ----------
-    wing: str
-        'f' for front wing, or 'r' for rear wing
     Xb: ndarray[j, n, i]
         Border element coordinates
     nXb: int
@@ -79,6 +75,8 @@ def plot_mesh_3D(wing, Xb, nXb, Nb, Xc, nXc, Nc, *, save=False):
         Number of center elements
     Nc: ndarray[j, i]
         Unit normals to the center elements
+    filename: str
+        Filename (stem) of saved plot
     save: bool
         If `True`, save plot as a png.
         If `False`, open plot in interactive viewer.
@@ -91,7 +89,7 @@ def plot_mesh_3D(wing, Xb, nXb, Nb, Xc, nXc, Nc, *, save=False):
     ax.axis('equal')
 
     if save:
-        fig.savefig(f'{g.plot_folder}/mesh3d/mesh3d_{wing}.png')
+        fig.savefig(f'{g.plot_folder}/mesh3d/{filename}.png')
         plt.close()
     else:
         plt.show()
@@ -285,6 +283,9 @@ def view_plot(full_path):
 def plot():
     # with np.load(f'{g.data_folder}/mesh2d/mesh2d_f.npz') as data:
     #     plotting_funcs['mesh2d'](*data.values(), filename='mesh2d_f', save=False)
+
+    # with np.load(f'{g.data_folder}/mesh3d/mesh3d_f.npz') as data:
+    #     plotting_funcs['mesh3d'](*data.values(), filename='mesh23_f', save=True)
 
     # with np.load(f'{g.data_folder}/airfoil_vel/airfoil_vel_rl_0.0000.npz') as data:
     #     plotting_funcs['airfoil_vel'](*data.values(), save=False)
