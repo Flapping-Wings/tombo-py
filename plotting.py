@@ -237,8 +237,16 @@ def plot_force(times, force, *, save=False):
     else:
         plt.show()
 
-def plot_moment():
-    pass
+def plot_moment(times, moment, *, save=False):
+    fig = plt.figure()
+    plt.plot(times, moment, 'o-r')
+    plt.grid(True)
+
+    if save:
+        plt.savefig(f'{g.plot_folder}/force/force_y') # TODO fix filename
+        plt.close(fig)
+    else:
+        plt.show()
 
 
 def dummy():
@@ -276,8 +284,11 @@ def plot():
     # with np.load(f'{g.data_folder}/wake/wake_0.npz') as data:
     #     plotting_funcs['wake'](*data.values(), save=False)
 
-    with np.load(f'{g.data_folder}/force/force_z.npz') as data:
-        plotting_funcs['force'](*data.values(), save=False)
+    # with np.load(f'{g.data_folder}/force/force_z.npz') as data:
+    #     plotting_funcs['force'](*data.values(), save=False)
+
+    with np.load(f'{g.data_folder}/moment/moment_y.npz') as data:
+        plotting_funcs['moment'](*data.values(), save=False)
 
 
 if __name__ == '__main__':
