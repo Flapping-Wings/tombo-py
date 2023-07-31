@@ -226,6 +226,20 @@ def plot_wing_set(ax, nXb, nXw, Xb, Xw):
             else:
                 ax.plot(x, y, z, 'b')
 
+def plot_force(times, force, *, save=False):
+    fig = plt.figure()
+    plt.plot(times, force, 'x-k')
+    plt.grid(True)
+
+    if save:
+        plt.savefig(f'{g.plot_folder}/force/force_y') # TODO fix filename
+        plt.close(fig)
+    else:
+        plt.show()
+
+def plot_moment():
+    pass
+
 
 def dummy():
     pass
@@ -237,8 +251,8 @@ plotting_funcs = {
     'airfoil_vel': plot_airfoil_vel,
     'GAMA': plot_GAMA,
     'wake': plot_wake,
-    'force': dummy,
-    'moment': dummy
+    'force': plot_force,
+    'moment': plot_moment
 }
 
 def create_directories(base_path):
@@ -259,8 +273,11 @@ def plot():
     # with np.load(f'{g.data_folder}/GAMA/GAMA_rl_0.0000.npz') as data:
     #     plotting_funcs['GAMA'](*data.values(), save=False)
 
-    with np.load(f'{g.data_folder}/wake/wake_0.npz') as data:
-        plotting_funcs['wake'](*data.values(), save=False)
+    # with np.load(f'{g.data_folder}/wake/wake_0.npz') as data:
+    #     plotting_funcs['wake'](*data.values(), save=False)
+
+    with np.load(f'{g.data_folder}/force/force_z.npz') as data:
+        plotting_funcs['force'](*data.values(), save=False)
 
 
 if __name__ == '__main__':
