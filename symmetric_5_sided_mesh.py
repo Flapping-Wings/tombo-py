@@ -56,7 +56,7 @@ def symmetric_5_sided_mesh(wing, lt_, lr_, bang_, hfactor, wfactor):
 
     # Save data for plotting
     np.savez(f'{g.data_folder}/mesh2d/mesh2d_{wing}',
-             wing=wing, Xb=Xb, nXb=nXb, Xc=Xc, nXc=nXc)
+             Xb=Xb, nXb=nXb, Xc=Xc, nXc=nXc)
     np.savez(f'{g.data_folder}/mesh3d/mesh3d_{wing}',
              wing=wing, Xb=Xb, nXb=nXb, Nb=Nb, Xc=Xc, nXc=nXc, Nc=Nc)
        
