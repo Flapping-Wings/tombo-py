@@ -116,7 +116,19 @@ def plot_mesh_3D_helper(ax, X, nX, N):
 
         ax.plot(Nline[:, 0], Nline[:, 1], Nline[:, 2], color='r') 
 
-def plot_airfoil_vel(Vnc, XC, NC, m, iwing, t, *, save=False):
+def plot_airfoil_vel(Vnc, XC, NC, *, filename, save):
+    """
+    Plot normal velocity of the airfoil at collocation points
+
+    Parameters
+    ----------
+    Vnc: ndarray[1, nXC]
+        Normal velocity (global) 
+    XC: ndarray[j, i]
+        Collocation points (global)
+    NC[j, i]
+        Unit normals at collocation points (global)
+    """
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     
@@ -125,7 +137,7 @@ def plot_airfoil_vel(Vnc, XC, NC, m, iwing, t, *, save=False):
     ax.set_title('Normal velocity vectors at collocation points')
 
     if save:
-        plt.savefig(f'{g.plot_folder}/airfoil_vel/airfoil_vel_{g.labels[m][iwing]}_{t:.4f}.png')
+        plt.savefig(f'{g.plot_folder}/airfoil_vel/{filename}.png')
         plt.close(fig)
     else:
         plt.show()
@@ -287,8 +299,8 @@ def plot():
     # with np.load(f'{g.data_folder}/mesh3d/mesh3d_f.npz') as data:
     #     plotting_funcs['mesh3d'](*data.values(), filename='mesh23_f', save=True)
 
-    # with np.load(f'{g.data_folder}/airfoil_vel/airfoil_vel_rl_0.0000.npz') as data:
-    #     plotting_funcs['airfoil_vel'](*data.values(), save=False)
+    # with np.load(f'{g.data_folder}/airfoil_vel/airfoil_vel_fr_0.0000.npz') as data:
+    #     plotting_funcs['airfoil_vel'](*data.values(), filename='airfoil_vel_fr_0.0000', save=True)
 
     # with np.load(f'{g.data_folder}/GAMA/GAMA_rl_0.0000.npz') as data:
     #     plotting_funcs['GAMA'](*data.values(), save=False)
