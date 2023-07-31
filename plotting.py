@@ -142,7 +142,19 @@ def plot_airfoil_vel(Vnc, XC, NC, *, filename, save):
     else:
         plt.show()
 
-def plot_GAMA(GAMA, XC, NC, m, iwing, t, *, save=False):
+def plot_GAMA(GAMA, XC, NC, *, filename, save):
+    """
+    Plot GAMA at the collocation points using the normal direction
+
+    Parameters
+    ----------
+    GAMA: 
+        TODO
+    XC: ndarray[j, i]
+        Collocation points (global)
+    NC[j, i]
+        Unit normals at collocation points (global)
+    """
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     
@@ -151,7 +163,7 @@ def plot_GAMA(GAMA, XC, NC, m, iwing, t, *, save=False):
     ax.set_title('GAMA at collocation points')
 
     if save:
-        plt.savefig(f'{g.plot_folder}/GAMA/GAMA_{g.labels[m][iwing]}_{t:.4f}.png')
+        plt.savefig(f'{g.plot_folder}/GAMA/{filename}.png')
         plt.close(fig)
     else:
         plt.show()
@@ -303,7 +315,7 @@ def plot():
     #     plotting_funcs['airfoil_vel'](*data.values(), filename='airfoil_vel_fr_0.0000', save=True)
 
     # with np.load(f'{g.data_folder}/GAMA/GAMA_rl_0.0000.npz') as data:
-    #     plotting_funcs['GAMA'](*data.values(), save=False)
+    #     plotting_funcs['GAMA'](*data.values(), filename='GAMA_rl_0.0000', save=True)
 
     # with np.load(f'{g.data_folder}/wake/wake_0.npz') as data:
     #     plotting_funcs['wake'](*data.values(), save=False)

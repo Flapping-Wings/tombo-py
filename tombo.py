@@ -226,11 +226,9 @@ def tombo():
         # Save data for plotting GAMA
         for i in range(g.nwing):
             np.savez(f'{g.data_folder}/GAMA/GAMA_{g.labels[0][i]}_{t:.4f}',
-                        GAMA=GAM_f[i], XC=XC_f[..., i], NC=NC_f[..., i],
-                        m=0, iwing=i, t=t)
+                        GAMA=GAM_f[i], XC=XC_f[..., i], NC=NC_f[..., i])
             np.savez(f'{g.data_folder}/GAMA/GAMA_{g.labels[1][i]}_{t:.4f}',
-                        GAMA=GAM_r[i], XC=XC_r[..., i], NC=NC_r[..., i],
-                        m=1, iwing=i, t=t)
+                        GAMA=GAM_r[i], XC=XC_r[..., i], NC=NC_r[..., i])
 
         # Save data for plotting wakes
         np.savez(f'{g.data_folder}/wake/wake_{istep}', istep=istep,
