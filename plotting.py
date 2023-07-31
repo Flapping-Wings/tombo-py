@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -272,9 +273,14 @@ def create_directories(base_path):
         if not dir.exists():
             dir.mkdir()
 
-def plot():
-    create_directories(g.plot_folder)
+def view_plot(full_path):
+    path = Path(full_path)
+    plot_type = path.parts[-2]
 
+    with np.load(full_path) as data:
+        plotting_funcs[plot_type](*data.values(), save=False)
+
+def plot():
     # with np.load(f'{g.data_folder}/airfoil_vel/airfoil_vel_rl_0.0000.npz') as data:
     #     plotting_funcs['airfoil_vel'](*data.values(), save=False)
 
@@ -287,9 +293,18 @@ def plot():
     # with np.load(f'{g.data_folder}/force/force_z.npz') as data:
     #     plotting_funcs['force'](*data.values(), save=False)
 
-    with np.load(f'{g.data_folder}/moment/moment_y.npz') as data:
-        plotting_funcs['moment'](*data.values(), save=False)
+    # with np.load(f'{g.data_folder}/moment/moment_y.npz') as data:
+    #     plotting_funcs['moment'](*data.values(), save=False)
+    pass
 
+def main():
+    create_directories(g.plot_folder)
+
+    full_path = sys.argv[1]
+    path = Path(full_path)
+
+    if path.is_file():
+        view_plot(full_path)
 
 if __name__ == '__main__':
-    plot()
+    main()
