@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import globals as g
 
-def lrs_wing_NVs(m, iwing, xC, XC, NC, t, theta, phi, dph, dth, a, beta, U, iteration):
+def lrs_wing_NVs(m, iwing, xC, XC, NC, t, theta, phi, dph, dth, a, beta, U):
     """
     Get the normal velocity at the wing collocation points XC[j, i]
     in the global system.
