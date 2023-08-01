@@ -1,5 +1,6 @@
 import os
 import sys
+from multiprocessing import Pool
 from pathlib import Path
 
 import numpy as np
@@ -326,44 +327,44 @@ def create_directories(base_path):
         if not dir.exists():
             dir.mkdir()
 
-def view_plot(full_path):
+def make_plot(full_path, save=True):
     path = Path(full_path)
     plot_type = path.parts[-2]
 
     with np.load(full_path) as data:
-        plotting_funcs[plot_type](*data.values(), save=False)
+        plotting_funcs[plot_type](*data.values(),
+                                  filename=path.stem,
+                                  save=save)
 
-def plot():
-    # with np.load(f'{g.data_folder}/mesh2d/mesh2d_f.npz') as data:
-    #     plotting_funcs['mesh2d'](*data.values(), filename='mesh2d_f', save=False)
+def main(path):
+    CHUNKSIZE = 10
 
-    # with np.load(f'{g.data_folder}/mesh3d/mesh3d_f.npz') as data:
-    #     plotting_funcs['mesh3d'](*data.values(), filename='mesh23_f', save=True)
-
-    # with np.load(f'{g.data_folder}/airfoil_vel/airfoil_vel_fr_0.0000.npz') as data:
-    #     plotting_funcs['airfoil_vel'](*data.values(), filename='airfoil_vel_fr_0.0000', save=True)
-
-    # with np.load(f'{g.data_folder}/GAMA/GAMA_rl_0.0000.npz') as data:
-    #     plotting_funcs['GAMA'](*data.values(), filename='GAMA_rl_0.0000', save=True)
-
-    # with np.load(f'{g.data_folder}/wake/wake_0.npz') as data:
-    #     plotting_funcs['wake'](*data.values(), filename='wake_0', save=True)
-
-    # with np.load(f'{g.data_folder}/force/force_z.npz') as data:
-    #     plotting_funcs['force'](*data.values(), filename='force_z', save=True)
-
-    # with np.load(f'{g.data_folder}/moment/moment_z.npz') as data:
-    #     plotting_funcs['moment'](*data.values(), filename='moment_z', save=True)
-    pass
-
-def main():
     create_directories(g.plot_folder)
 
-    full_path = sys.argv[1]
-    path = Path(full_path)
+    # Create a single plot in the interactable viewer
+    if os.path.isfile(path):
+        make_plot(path, save=False)
 
-    if path.is_file():
-        view_plot(full_path)
+    # Save plots for all data files in directory
+    elif os.path.isdir(path):
+        # Construct list of all data files in directory
+        data_files = [os.path.join(root, file)
+                      for root, _, files in os.walk(path)
+                      for file in files]
+        
+        # Create plots
+        if len(data_files) < CHUNKSIZE:
+            # Force map to make calls with empty loop
+            for _ in map(make_plot, data_files):
+                pass
+        else:
+            with Pool() as pool:
+                # Force imap_unordered to make calls with empty loop
+                for _ in pool.imap_unordered(make_plot, data_files, chunksize=CHUNKSIZE):
+                    pass
+
+    else:
+        raise ValueError("argument must be path to a directory or a file")
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1])
