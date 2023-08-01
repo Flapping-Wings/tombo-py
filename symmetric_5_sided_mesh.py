@@ -2,7 +2,7 @@ import numpy as np
 import globals as g
 import matplotlib.pyplot as plt
 
-def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
+def symmetric_5_sided_mesh(wing, lt_, lr_, bang_, hfactor, wfactor):
     """
     Create a symmetric, 5-sided wing mesh
 
@@ -10,8 +10,8 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
 
     Parameters
     ----------
-    W: int 
-        1 (forward wing), 2 (rear wing)
+    wing: str 
+        'f' for front wing, or 'r' for rear wing
     lt_: float
         Length of tapered section of the wing in cm
     lr_: float
@@ -54,22 +54,12 @@ def symmetric_5_sided_mesh(W, lt_, lr_, bang_, hfactor, wfactor):
     Xb, nXb, Nb, Lt, Lr, C, n, wi_1 = WingBorder(lt_, lr_, bang, l_, c_, hfactor, wfactor)
     Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1, is_tapered)
 
-    # Plot mesh
-    # TODO: Refactor plotting
-    if g.mplot:
-        fig2, ax2 = plt.subplots()
-        plot2Elem(fig2, ax2, Xb, nXb, 4, 'r', 2)
-        plot2Elem(fig2, ax2, Xc, nXc, 4, 'b', 2)
-        fig2.savefig(f"{g.folder}mesh/2dmesh_{W}.png")
-        plt.close()
-
-        fig3 = plt.figure()
-        ax3 = fig3.add_subplot(projection='3d')
-        plot3Elem(fig3, ax3, Xb, nXb, Nb)
-        plot3Elem(fig3, ax3, Xc, nXc, Nc)
-        fig3.savefig(f"{g.folder}mesh/3dmesh_{W}.png")
-        plt.close()
-        
+    # Save data for plotting
+    np.savez(f'{g.data_folder}/mesh2d/mesh2d_{wing}',
+             Xb=Xb, nXb=nXb, Xc=Xc, nXc=nXc)
+    np.savez(f'{g.data_folder}/mesh3d/mesh3d_{wing}',
+             Xb=Xb, nXb=nXb, Nb=Nb, Xc=Xc, nXc=nXc, Nc=Nc)
+       
     return Xb, nXb, Nb, Xc, nXc, Nc, l_, c_, h
 
 def WingBorder(lt, lr, bang, l_, c_, hfactor, wfactor):
@@ -695,68 +685,3 @@ def CRnodes(Lt, Lr, C, bang, n):
             Xcr[1, ir, ic] = y
 
     return Xct, Xcr
-
-
-def plot2Elem(fig, axs, Xn, nXn, npoly, color, lw):
-    """
-    Plot a group of polygonal elements in x-y plane
-
-    INPUT:
-    - Xn[j, n, i] : Polynomial element array
-    - nXn         : # of elements 
-    - npoly       : Order of polygon
-    - color       : Color in the plot
-    - lw          : Line width
-    """
-
-    for i in range(nXn):
-        x = np.zeros(npoly + 1)
-        y = np.zeros(npoly + 1)
-
-        for ipoly in range(npoly):
-            x[ipoly] = Xn[0, ipoly, i]
-            y[ipoly] = Xn[1, ipoly, i]
-        
-        x[npoly] = Xn[0, 0, i]
-        y[npoly] = Xn[1, 0, i]
-        cx = Xn[0, npoly, i]
-        cy = Xn[1, npoly, i]
-
-        axs.plot(x, y, color, linewidth=lw)
-        axs.plot(cx, cy, 'o')
-        axs.axis('equal')
-
-    return
-
-def plot3Elem(fig, axs, X, nX, N):
-    
-    """
-    Plot 3D elements with the unit normals
-
-    INPUT:
-    - X[j, n, i] : Rectangular element array
-    - nX         : # of elements
-    - N[j, i]    : Unit normal to the element
-    """
-
-    scale = 0.1
-    Nline = np.zeros((2, 3))
-    x = np.zeros(5)
-    y = np.zeros(5)
-    z = np.zeros(5)
-
-    for i in range(nX):
-        for n in range(4):
-            x[n] = X[0, n, i]
-            y[n] = X[1, n, i]
-            z[n] = X[2, n, i]
-        x[4] = X[0, 0, i]
-        y[4] = X[1, 0, i]
-        z[4] = X[2, 0, i]
-        axs.plot(x, y, z, 'k')
-        Nline[:,:] = np.array([X[:, 4, i], X[:, 4, i] + scale * N[:, i]]) 
-        axs.plot(Nline[:, 0], Nline[:, 1], Nline[:, 2], 'r') 
-        axs.axis('equal')
-
-
-    return

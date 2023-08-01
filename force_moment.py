@@ -112,39 +112,18 @@ def force_moment(rho_, v_, d_, nstep, dt, U,
     momenty = -m_ * momenty
     momentz = -m_ * momentz
 
-    # Plot forces and moments
-    fm = plt.figure()
-    plt.plot(times, forcex, 'x-k')
-    plt.grid(True)
-    plt.savefig(g.folder + 'f&m/fx.png')
-    plt.close(fm)
+    # Save data for plotting forces
+    np.savez(f'{g.data_folder}/force/force_x',
+             times=times, force=forcex)
+    np.savez(f'{g.data_folder}/force/force_y',
+             times=times, force=forcey)
+    np.savez(f'{g.data_folder}/force/force_z',
+             times=times, force=forcez)
 
-    fm = plt.figure()
-    plt.plot(times, forcey, '+-k')
-    plt.grid(True)
-    plt.savefig(g.folder + 'f&m/fy.png')
-    plt.close(fm)
-
-    fm = plt.figure()
-    plt.plot(times, forcez, 'x-k')
-    plt.grid(True)
-    plt.savefig(g.folder + 'f&m/fz.png')
-    plt.close(fm)
-
-    fm = plt.figure()
-    plt.plot(times, momentx, 'o-r')
-    plt.grid(True)
-    plt.savefig(g.folder + 'f&m/m1.png')
-    plt.close(fm)
-
-    fm = plt.figure()
-    plt.plot(times, momenty, 'o-r')
-    plt.grid(True)
-    plt.savefig(g.folder + 'f&m/m2.png')
-    plt.close(fm)
-
-    fm = plt.figure()
-    plt.plot(times, momentz, 'o-r')
-    plt.grid(True)
-    plt.savefig(g.folder + 'f&m/m3.png')
-    plt.close(fm)
+    # Save data for plotting moments
+    np.savez(f'{g.data_folder}/moment/moment_x',
+             times=times, moment=momentx)
+    np.savez(f'{g.data_folder}/moment/moment_y',
+             times=times, moment=momenty)
+    np.savez(f'{g.data_folder}/moment/moment_z',
+             times=times, moment=momentz)

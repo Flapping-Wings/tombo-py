@@ -1,12 +1,8 @@
 import numpy as np
-
-import matplotlib.pyplot as plt
-
-plt.ioff()
-
 from scipy.io import loadmat
 
 import globals as g
+from plotting import create_directories
 from symmetric_5_sided_mesh import symmetric_5_sided_mesh
 from nd_data import nd_data
 from wing_total import wing_total
@@ -18,8 +14,6 @@ from n_vel_T_by_W import n_vel_T_by_W
 from cross_matrix import cross_matrix
 from assemble_matrix import assemble_matrix
 from solution import solution
-from plot_GAM import plot_GAM
-from plot_WB import plot_WB
 from s_impulse_WT import s_impulse_WT
 from b_vel_B_by_T_matrix import b_vel_B_by_T_matrix
 from vel_B_by_T import vel_B_by_T
@@ -28,18 +22,17 @@ from assemble_vel_B_by_T import assemble_vel_B_by_T
 from add_wake import add_wake
 from force_moment import force_moment
 from vel_by import vel_by
-from plot_function import plot_graphs
 
 
 def tombo():
     # SETUP
     # -----
-    create_directories()
+    create_directories(g.data_folder)
 
     xb_f, nxb_f, nb_f, xc_f, nxc_f, nc_f, l_f, c_f, h_f = \
-        symmetric_5_sided_mesh(1, g.lt_f, g.lr_f, g.bang_f, g.hfactor_f, g.wfactor_f)
+        symmetric_5_sided_mesh('f', g.lt_f, g.lr_f, g.bang_f, g.hfactor_f, g.wfactor_f)
     xb_r, nxb_r, nb_r, xc_r, nxc_r, nc_r, l_r, c_r, h_r = \
-        symmetric_5_sided_mesh(2, g.lt_r, g.lr_r, g.bang_r, g.hfactor_r, g.wfactor_r)
+        symmetric_5_sided_mesh('r', g.lt_r, g.lr_r, g.bang_r, g.hfactor_r, g.wfactor_r)
     
     if g.b_r - g.b_f >= 0.5 * (c_r + c_f):
         print("wing clearance checked")
@@ -126,10 +119,7 @@ def tombo():
     MVNs_f = lr_set_matrix(xt_f, nxt_f, xC_f, nC_f, g.RCUT)
     MVNs_r = lr_set_matrix(xt_r, nxt_r, xC_r, nC_r, g.RCUT)
 
-    for istep in range(g.nstep):
-
-        iteration = {}
-        
+    for istep in range(g.nstep):       
         if g.idebg:
             data = loadmat(f"matlab_data/data{istep + 1}.mat")
 
@@ -166,10 +156,10 @@ def tombo():
         for i in range(g.nwing):
             # Front wing
             Vnc_f[i, :] = lrs_wing_NVs(0, i, xC_f, XC_f[:, :, i], NC_f[:, :, i], t, theta[i],
-                                       phi[i], dph[i], dth[i], a[i], beta[i], U, iteration)
+                                       phi[i], dph[i], dth[i], a[i], beta[i], U)
             # Rear wing
             Vnc_r[i, :] = lrs_wing_NVs(1, i, xC_r, XC_r[:, :, i], NC_r[:, :, i], t, theta[i + 2],
-                                       phi[i + 2], dph[i + 2], dth[i + 2], a[i + 2], beta[i + 2], U, iteration)
+                                       phi[i + 2], dph[i + 2], dth[i + 2], a[i + 2], beta[i + 2], U)
 
         if g.idebg:
             print(f"Vnc {istep + 1}")
@@ -206,7 +196,7 @@ def tombo():
         MVNs_43 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_r[:, :, :, 0], nxt_r, g.RCUT)
 
         # Assemble the total matrix using MVNs_f[:,:,1], MVNs_r[:,:,1], MVNs_ij[:,:]
-        MVN = assemble_matrix(nxt_f, nxt_r, MVNs_f, MVNs_r,
+        MVN = assemble_matrix(MVNs_f, MVNs_r,
                               MVNs_12, MVNs_13, MVNs_14,
                               MVNs_21, MVNs_23, MVNs_24,
                               MVNs_31, MVNs_32, MVNs_34,
@@ -229,48 +219,17 @@ def tombo():
         GAM_r[0, 0:nxt_r] = GAMA[(2 * nxt_f):(2 * nxt_f + nxt_r)]  # Rear right wing
         GAM_r[1, 0:nxt_r] = GAMA[(2 * nxt_f + nxt_r):(2 * nxt_f + 2 * nxt_r)]  # Rear left  wing
 
-        # Plot GAMA at the collocation points of the elements
-        # using the unit normal direction: positive up and negative down
-        if g.gplot:
-            for i in range(g.nwing):
-                # Front wing
+        # Save data for plotting GAMA
+        for i in range(g.nwing):
+            np.savez(f'{g.data_folder}/GAMA/GAMA_{g.labels[0][i]}_{t:.4f}',
+                        GAMA=GAM_f[i], XC=XC_f[..., i], NC=NC_f[..., i])
+            np.savez(f'{g.data_folder}/GAMA/GAMA_{g.labels[1][i]}_{t:.4f}',
+                        GAMA=GAM_r[i], XC=XC_r[..., i], NC=NC_r[..., i])
 
-                iteration["GAM_front"] = {
-                    "i": i,
-                    "t": t,
-                    "GAM_f": np.copy(GAM_f[i,:]),
-                    "XC_f": np.copy(XC_f[:,:,i]),
-                    "NC_f": np.copy(NC_f[:,:,i])
-                }
-                
-                # plot_GAM(0, i, t, GAM_f[i,:], XC_f[:,:,i], NC_f[:,:,i])
-
-                # Rear wing
-
-                iteration["GAM_rear"] = {
-                    "i": i,
-                    "t": t,
-                    "GAM_r": np.copy(GAM_r[i,:]),
-                    "XC_r": np.copy(XC_r[:,:,i]),
-                    "NC_r": np.copy(NC_r[:,:,i])
-                }
-                
-                # plot_GAM(1, i, t, GAM_r[i,:], XC_r[:,:,i], NC_r[:,:,i])
-
-        # Plot locations, Xb & Xw, of border & wake vortices (space-fixed sys)
-        if g.wplot:
-            iteration["wake"] = {
-                "istep": istep,
-                "nxb_f": nxb_f,
-                "nxw_f": nxw_f,
-                "Xb_f": np.copy(Xb_f),
-                "Xw_f": np.copy(Xw_f),
-                "nxb_r": nxb_r,
-                "nxw_r": nxw_r,
-                "Xb_r": np.copy(Xb_r),
-                "Xw_r": np.copy(Xw_r)
-            }
-            # plot_WB(istep, g.nxb_f, nxw_f, Xb_f, Xw_f, g.nxb_r, nxw_r, Xb_r, Xw_r)
+        # Save data for plotting wakes
+        np.savez(f'{g.data_folder}/wake/wake_{istep}',
+                    nXb_f=nxb_f, nXw_f=nxw_f, Xb_f=Xb_f, Xw_f=Xw_f,
+                    nXb_r=nxb_r, nXw_r=nxw_r, Xb_r=Xb_r, Xw_r=Xw_r)
 
         if g.nstep > 3:  # At least 4 steps needed to calculate forces and moments
             # Calculate impulses in the body-translating system
@@ -425,8 +384,6 @@ def tombo():
             print(np.allclose(GAMw_r, data['GAMw_r'], atol=1e-16))
             print(np.allclose(nxt_r, data['nxt_r'], atol=1e-16))
             print(np.allclose(Xw_r[:, :, :nxw_r, :], data['Xw_r'], atol=1e-16))
-
-        g.iterations.append(iteration)
     # END TIME MARCH
 
     # Calculate the force and moment on the airfoil
@@ -434,39 +391,6 @@ def tombo():
         force_moment(g.rho_, v_[0], d_[0], g.nstep, g.dt, U,
                      limpa_f, limpa_r, aimpa_f, aimpa_r,
                      limpw_f, limpw_r, aimpw_f, aimpw_r)
-
-    plot_graphs()
-
-
-def check_input(b_f, b_r, c_f, c_r, p, rtOff, tau):
-    if g.b_r - g.b_f >= 0.5 * (c_r + c_f):
-        print("wing clearance checked")
-    else:
-        raise ValueError("rear and forward wings interfere")
-
-
-def create_directories():
-    from pathlib import Path
-
-    base_dir = Path(g.folder)
-    if not base_dir.exists():
-        base_dir.mkdir()
-
-    mesh_dir = base_dir / Path("mesh")
-    if not mesh_dir.exists():
-        mesh_dir.mkdir()
-
-    debug_dir = base_dir / Path("debug")
-    if not debug_dir.exists():
-        debug_dir.mkdir()
-
-    wake_dir = base_dir / Path("wake")
-    if not wake_dir.exists():
-        wake_dir.mkdir()
-
-    f_and_m = base_dir / Path("f&m")
-    if not f_and_m.exists():
-        f_and_m.mkdir()
 
 
 if __name__ == "__main__":

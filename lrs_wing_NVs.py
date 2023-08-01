@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import globals as g
 
-def lrs_wing_NVs(m, iwing, xC, XC, NC, t, theta, phi, dph, dth, a, beta, U, iteration):
+def lrs_wing_NVs(m, iwing, xC, XC, NC, t, theta, phi, dph, dth, a, beta, U):
     """
     Get the normal velocity at the wing collocation points XC[j, i]
     in the global system.
@@ -65,57 +65,10 @@ def lrs_wing_NVs(m, iwing, xC, XC, NC, t, theta, phi, dph, dth, a, beta, U, iter
     # Normal velocity components of the airfoil
     Vnc = vx * NC[0, :] + vy * NC[1, :] + vz * NC[2, :]
 
-    if g.vplot:
-        iteration["vel"] = {
-            "XC": np.copy(XC),
-            "Vnc": np.copy(Vnc),
-            "NC": np.copy(NC),
-            "m": m,
-            "iwing": iwing,
-            "t": t
-        }
-        # plot_normal_vel(XC, Vnc, NC, m, iwing, t)
+    # Save data for plotting
+    labels = [['fr', 'fl'], ['rr', 'rl']]
 
+    np.savez(f'{g.data_folder}/airfoil_vel/airfoil_vel_{labels[m][iwing]}_{t:.4f}',
+             Vnc=Vnc, XC=XC, NC=NC)
+    
     return Vnc
-
-
-# TODO
-def plot_normal_vel(XC, Vnc, NC, m, iwing, t):
-    # End points for the normal velocity vector
-    sf = 0.1    # Scale factor for the velocity plot
-    xaif = XC[0,:]
-    yaif = XC[1,:]
-    zaif = XC[2,:]
-    
-    xtip = xaif + sf * Vnc * NC[0,:]
-    ytip = yaif + sf * Vnc * NC[1,:]
-    ztip = zaif + sf * Vnc * NC[2,:]
-    
-    # Plot normal velocity vectors at collocation points     
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-
-    for i in range(len(xtip)):
-      ax.plot([xaif[i],xtip[i]], [yaif[i],ytip[i]], [zaif[i],ztip[i]])
-
-    ax.scatter(XC[0,:], XC[1,:], XC[2,:], marker='o')
-
-    ax.set_title('Normal velocity vectors at collocation points')
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
-    ax.set_box_aspect([1, 1, 1])
-    ax.axis('equal')
-
-    if m == 0:
-        if iwing == 0:
-            plt.savefig(g.folder + 'debug/Vairfoil_fr_' + f'{t:.4f}' + '.png')
-        else:
-            plt.savefig(g.folder + 'debug/Vairfoil_fl_' + f'{t:.4f}' + '.png')
-    else:
-        if iwing == 0:
-            plt.savefig(g.folder + 'debug/Vairfoil_rr_' + f'{t:.4f}' + '.png')
-        else:
-            plt.savefig(g.folder + 'debug/Vairfoil_rl_' + f'{t:.4f}' + '.png')
-
-    plt.close(fig)

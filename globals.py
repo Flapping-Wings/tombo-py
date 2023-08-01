@@ -4,7 +4,7 @@ import numpy.typing as npt
 # General configuration
 # ---------------------
 
-stime: bool = True
+# stime: bool = True
 """
 Time specification:
 - multiple times (False),
@@ -18,28 +18,21 @@ Linear equation solver:
 """
 
 
-# Output files
-# ------------
-
-folder: str = 'fig/'
-"""Path to output folder"""
-# fid = open(f"{folder}/output.txt", 'w')
-"""Output file"""
-
-
 # Plotting
 # --------
 
-iplot: bool = True
-"""Toggle chord path plot"""
-mplot: bool = True
-"""Toggle airfoil mesh plot"""
-vplot: bool = True
-"""Toggle airfoil normal velocity plot"""
-gplot: bool = True
-"""Toggle gamma plot"""
-wplot: bool = True
-"""Toggle wake vortex plot"""
+data_folder: str = 'output/data'
+"""Folder for data used for plotting"""
+plot_folder: str = 'output/plots'
+"""Folder for generated plots"""
+labels: list = [['fr', 'fl'], ['rr', 'rl']]
+"""
+Labels used in filenames
+- 'fr': front right
+- 'fl': front left
+- 'rr': rear right
+- 'rl': rear left
+"""
 idebg: bool = True
 """Toggle debug prints"""
 
@@ -173,10 +166,6 @@ when the wind is calm
 
 RCUT: float = 1.0e-10
 """Distance between source and observation points to be judged as zero"""
-
-
-"""Plot Variables Dictionary"""
-iterations = []
 
 
 """Check config values"""
