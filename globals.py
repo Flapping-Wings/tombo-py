@@ -4,7 +4,7 @@ import numpy.typing as npt
 # General configuration
 # ---------------------
 
-stime: bool = True
+# stime: bool = True
 """
 Time specification:
 - multiple times (False),
@@ -33,17 +33,6 @@ Labels used in filenames
 - 'rr': rear right
 - 'rl': rear left
 """
-
-iplot: bool = True
-"""Toggle chord path plot"""
-mplot: bool = True
-"""Toggle airfoil mesh plot"""
-vplot: bool = True
-"""Toggle airfoil normal velocity plot"""
-gplot: bool = True
-"""Toggle gamma plot"""
-wplot: bool = True
-"""Toggle wake vortex plot"""
 idebg: bool = True
 """Toggle debug prints"""
 
