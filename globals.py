@@ -179,10 +179,6 @@ RCUT: float = 1.0e-10
 """Distance between source and observation points to be judged as zero"""
 
 
-"""Plot Variables Dictionary"""
-iterations = []
-
-
 """Check config values"""
 
 if np.any(p < 4):

@@ -22,7 +22,6 @@ from assemble_vel_B_by_T import assemble_vel_B_by_T
 from add_wake import add_wake
 from force_moment import force_moment
 from vel_by import vel_by
-from plot_function import plot_graphs
 
 
 def tombo():
@@ -120,10 +119,7 @@ def tombo():
     MVNs_f = lr_set_matrix(xt_f, nxt_f, xC_f, nC_f, g.RCUT)
     MVNs_r = lr_set_matrix(xt_r, nxt_r, xC_r, nC_r, g.RCUT)
 
-    for istep in range(g.nstep):
-
-        iteration = {}
-        
+    for istep in range(g.nstep):       
         if g.idebg:
             data = loadmat(f"matlab_data/data{istep + 1}.mat")
 
@@ -160,10 +156,10 @@ def tombo():
         for i in range(g.nwing):
             # Front wing
             Vnc_f[i, :] = lrs_wing_NVs(0, i, xC_f, XC_f[:, :, i], NC_f[:, :, i], t, theta[i],
-                                       phi[i], dph[i], dth[i], a[i], beta[i], U, iteration)
+                                       phi[i], dph[i], dth[i], a[i], beta[i], U)
             # Rear wing
             Vnc_r[i, :] = lrs_wing_NVs(1, i, xC_r, XC_r[:, :, i], NC_r[:, :, i], t, theta[i + 2],
-                                       phi[i + 2], dph[i + 2], dth[i + 2], a[i + 2], beta[i + 2], U, iteration)
+                                       phi[i + 2], dph[i + 2], dth[i + 2], a[i + 2], beta[i + 2], U)
 
         if g.idebg:
             print(f"Vnc {istep + 1}")
@@ -388,8 +384,6 @@ def tombo():
             print(np.allclose(GAMw_r, data['GAMw_r'], atol=1e-16))
             print(np.allclose(nxt_r, data['nxt_r'], atol=1e-16))
             print(np.allclose(Xw_r[:, :, :nxw_r, :], data['Xw_r'], atol=1e-16))
-
-        g.iterations.append(iteration)
     # END TIME MARCH
 
     # Calculate the force and moment on the airfoil
@@ -397,8 +391,6 @@ def tombo():
         force_moment(g.rho_, v_[0], d_[0], g.nstep, g.dt, U,
                      limpa_f, limpa_r, aimpa_f, aimpa_r,
                      limpw_f, limpw_r, aimpw_f, aimpw_r)
-
-    plot_graphs()
 
 
 if __name__ == "__main__":
