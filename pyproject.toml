@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tombo-py"
+version = "0.0.1"
+description = "A simulation of flapping wings"
+readme = "README.md"
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "numba"
+]
+
+[tool.setuptools.packages.find]
+where = ["tombo"]
+include = ["*"]
+namespaces = true
+
+# [project.optional-dependencies]
+# test = ["pytest>=6.0"]
+
+# [tool.pytest.ini_options]
+# minversion = "6.0"
+# addopts = ["--import-mode=importlib"]
+# testpaths = ["tests"]
