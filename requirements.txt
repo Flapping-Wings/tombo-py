@@ -1,0 +1,7 @@
+build
+setuptools>=61.0
+numpy
+scipy
+matplotlib
+numba
+pytest
