@@ -17,6 +17,7 @@ idebg = config['general']['idebg']
 data_folder = config['plotting']['data_folder']
 plot_folder = config['plotting']['plot_folder']
 labels = config['plotting']['labels']
+plot_enabled = config['plotting']['plot_enabled']
 
 
 # Time
