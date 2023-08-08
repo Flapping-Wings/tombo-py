@@ -8,6 +8,8 @@ idebg = true
 
 
 [plotting]
+# Folder for generated data and plots
+output_folder = "output"
 # Folder for data used for plotting
 data_folder = "output/data"
 # Folder for generated plots
