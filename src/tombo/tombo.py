@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.io import loadmat
 
+from shutil import copyfile
+
 import tombo.globals as g
 from tombo.plotting import create_directories
 from tombo.symmetric_5_sided_mesh import symmetric_5_sided_mesh
@@ -28,6 +30,7 @@ def tombo():
     # SETUP
     # -----
     create_directories(g.data_folder)
+    copyfile('config.toml', f'{g.output_folder}/config.toml')
 
     xb_f, nxb_f, nb_f, xc_f, nxc_f, nc_f, l_f, c_f, h_f = \
         symmetric_5_sided_mesh('f', g.lt_f, g.lr_f, g.bang_f, g.hfactor_f, g.wfactor_f)
