@@ -23,8 +23,8 @@ labels = [['fr', 'fl'], ['rr', 'rl']]
 
     # Enable/disble plotting for each category
     [plotting.plot_enabled]
-    mesh2d = false
-    mesh3d = false
+    mesh2d = true
+    mesh3d = true
     airfoil_vel = true
     GAMA = true
     wake = true
