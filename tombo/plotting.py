@@ -336,33 +336,37 @@ def make_plot(full_path, save=True):
                                   filename=path.stem,
                                   save=save)
 
+def view_plot(path):
+    """Generate single plot in interactive viewer"""
+    make_plot(path, save=False)
+
+def generate_plots(dir, chunksize=10):
+    """Generate and save plot for each data file in dir"""
+    # Construct list of all data files in directory
+    data_files = [os.path.join(root, file)
+                    for root, _, files in os.walk(dir)
+                    for file in files]
+    
+    # Create plots
+    if len(data_files) < chunksize:
+        # Force map to make calls with empty loop
+        for _ in map(make_plot, data_files):
+            pass
+    else:
+        with Pool() as pool:
+            # Force imap_unordered to make calls with empty loop
+            for _ in pool.imap_unordered(make_plot, data_files, chunksize=chunksize):
+                pass
+
 def main(path):
     CHUNKSIZE = 10
 
     create_directories(g.plot_folder)
 
-    # Create a single plot in the interactable viewer
     if os.path.isfile(path):
-        make_plot(path, save=False)
-
-    # Save plots for all data files in directory
+        view_plot(path)
     elif os.path.isdir(path):
-        # Construct list of all data files in directory
-        data_files = [os.path.join(root, file)
-                      for root, _, files in os.walk(path)
-                      for file in files]
-        
-        # Create plots
-        if len(data_files) < CHUNKSIZE:
-            # Force map to make calls with empty loop
-            for _ in map(make_plot, data_files):
-                pass
-        else:
-            with Pool() as pool:
-                # Force imap_unordered to make calls with empty loop
-                for _ in pool.imap_unordered(make_plot, data_files, chunksize=CHUNKSIZE):
-                    pass
-
+        generate_plots(path)
     else:
         raise ValueError("argument must be path to a directory or a file")
 
