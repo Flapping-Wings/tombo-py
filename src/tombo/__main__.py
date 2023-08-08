@@ -20,15 +20,22 @@ def view_plot2(parser, args):
 
     view_plot(args.data_file)
 
+def sim_and_plot(parser, args):
+    tombo()
+    create_directories(g.plot_folder)
+    generate_plots(g.data_folder)
+
 def init_parsers():
     global_parser = argparse.ArgumentParser(
         prog='tombo',
-        description="Simulate and generate plots for a 3D flapping wings simulation")
-    subparsers = global_parser.add_subparsers(
-        title='subcommands'
+        description="Simulate and generate plots for a 3D flapping wings simulation"
     )
+    subparsers = global_parser.add_subparsers(title='subcommands')
 
-    sim_parser = subparsers.add_parser('sim', help='run simulation')
+    sim_parser = subparsers.add_parser(
+        'sim',
+        help='run simulation (configurable with config.toml)'
+    )
     sim_parser.set_defaults(func=tombo2)
 
     plot_parser = subparsers.add_parser('plot', help='generate plots')
@@ -40,9 +47,18 @@ def init_parsers():
     )
     plot_parser.set_defaults(func=generate_plots2)
 
-    view_parser = subparsers.add_parser('view', help='open plot in interactive viewer')
+    view_parser = subparsers.add_parser(
+        'view',
+        help='open plot in interactive viewer'
+    )
     view_parser.add_argument('data_file', help='path to data file to plot')
     view_parser.set_defaults(func=view_plot2)
+
+    simplot_parser = subparsers.add_parser(
+        'simplot',
+        help="run simulation and generate plots (configurable with config.toml)"
+    )
+    simplot_parser.set_defaults(func=sim_and_plot)
 
     return global_parser
 
