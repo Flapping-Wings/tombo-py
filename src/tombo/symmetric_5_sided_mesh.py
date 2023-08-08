@@ -1,6 +1,6 @@
 import numpy as np
-import globals as g
 import matplotlib.pyplot as plt
+import tombo.globals as g
 
 def symmetric_5_sided_mesh(wing, lt_, lr_, bang_, hfactor, wfactor):
     """

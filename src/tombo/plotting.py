@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-import globals as g
+import tombo.globals as g
 
 def plot_mesh_2D(Xb, nXb, Xc, nXc, npoly=4, *, filename, save):
     """

@@ -2,8 +2,8 @@ import numpy as np
 from scipy.io import loadmat
 from numba import njit
 
-import globals as g
-from VORTEXm import VORTEXm
+import tombo.globals as g
+from tombo.VORTEXm import VORTEXm
 
 @njit(cache=True)
 def b_vel_B_by_T_matrix(nXb, nXt, Xb, Xt, RCUT):

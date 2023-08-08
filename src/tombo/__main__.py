@@ -1,8 +1,8 @@
 import os
 import argparse
-import globals as g
-from tombo import tombo
-from plotting import create_directories, generate_plots, view_plot
+import tombo.globals as g
+from tombo.tombo import tombo
+from tombo.plotting import create_directories, generate_plots, view_plot
 
 def tombo2(parser, args):
     tombo()

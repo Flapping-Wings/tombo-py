@@ -1,6 +1,6 @@
 import numpy as np
 from numba import njit
-from VORTEXm import VORTEXm
+from tombo.VORTEXm import VORTEXm
 
 @njit(cache=True)
 def cross_matrix(XC, NC, nxT, Xt, nxS, RCUT):

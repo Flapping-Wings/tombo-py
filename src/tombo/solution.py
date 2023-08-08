@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.linalg import lu_factor, lu_solve
-import globals as g
+import tombo.globals as g
 
 def solution(nxt_f, nxt_r, MVN, Vnc_f, Vncw_f, Vnc_r, Vncw_r):
     """

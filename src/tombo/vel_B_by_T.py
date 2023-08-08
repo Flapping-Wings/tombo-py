@@ -1,5 +1,5 @@
 import numpy as np
-import globals as g
+import tombo.globals as g
 
 def vel_B_by_T(cVBT, GAM, nXt):
     s = np.shape(cVBT)
