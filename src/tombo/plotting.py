@@ -340,12 +340,21 @@ def view_plot(path):
     """Generate single plot in interactive viewer"""
     make_plot(path, save=False)
 
-def generate_plots(dir, chunksize=10):
+def generate_plots(dir, all, chunksize=10):
     """Generate and save plot for each data file in dir"""
     # Construct list of all data files in directory
-    data_files = [os.path.join(root, file)
-                    for root, _, files in os.walk(dir)
-                    for file in files]
+    data_files = []
+    
+    for root, _, files in os.walk(dir):
+        for file in files:
+            full_path = os.path.join(root, file)
+            path = Path(full_path)
+            plot_type = path.parts[-2]
+            
+            if all:
+                data_files.append(full_path)
+            elif g.plot_enabled[plot_type]:
+                data_files.append(full_path)
     
     # Create plots
     if len(data_files) < chunksize:
@@ -366,7 +375,7 @@ def main(path):
     if os.path.isfile(path):
         view_plot(path)
     elif os.path.isdir(path):
-        generate_plots(path)
+        generate_plots(path, all=False)
     else:
         raise ValueError("argument must be path to a directory or a file")
 
