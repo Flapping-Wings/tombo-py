@@ -40,9 +40,9 @@ nstep = 4
 
 
 [body_geometry]
-# Total number of wings
+# Total number of wings (constant)
 twing = 4
-# Number of front/rear wings
+# Number of front/rear wings (constant)
 nwing = 2
 # Body angle in degrees
 delta_ = 0.0
