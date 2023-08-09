@@ -9,6 +9,7 @@ with open('config.toml', mode='rb') as file:
 
 solver = config['general']['solver']
 idebg = config['general']['idebg']
+save_data = config['general']['save_data']
 
 
 # Plotting

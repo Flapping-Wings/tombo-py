@@ -5,6 +5,8 @@
 solver = false
 # Toggle debugging
 idebg = true
+# Toggle output data being saved (disable for testing)
+save_data = true
 
 
 [plotting]
