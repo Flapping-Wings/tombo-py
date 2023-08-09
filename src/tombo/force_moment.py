@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import splev, splrep, splder
-import globals as g
+import tombo.globals as g
 
 def force_moment(rho_, v_, d_, nstep, dt, U,
                  limpa_f, limpa_r, aimpa_f, aimpa_r,

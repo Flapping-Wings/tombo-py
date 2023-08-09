@@ -1,6 +1,6 @@
 import numpy as np
-from mVORTEX import mVORTEX
 from numba import njit
+from tombo.mVORTEX import mVORTEX
 
 @njit(cache=True)
 def vel_by(istep, X_target, nX_target, X_f, GAMA_f, nX_f, X_r, GAMA_r, nX_r, RCUT, LCUT):

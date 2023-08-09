@@ -14,9 +14,11 @@ idebg = config['general']['idebg']
 # Plotting
 # --------
 
+output_folder = config['plotting']['output_folder']
 data_folder = config['plotting']['data_folder']
 plot_folder = config['plotting']['plot_folder']
 labels = config['plotting']['labels']
+plot_enabled = config['plotting']['plot_enabled']
 
 
 # Time

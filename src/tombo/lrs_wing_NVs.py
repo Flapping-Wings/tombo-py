@@ -1,6 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
-import globals as g
+import tombo.globals as g
 
 def lrs_wing_NVs(m, iwing, xC, XC, NC, t, theta, phi, dph, dth, a, beta, U):
     """

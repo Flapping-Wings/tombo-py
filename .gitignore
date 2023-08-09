@@ -1,5 +1,10 @@
+.vscode
+
 fig
 output
 
 __pycache__
-.vscode
+.venv
+venv
+dist
+*.egg-info

@@ -1,6 +1,6 @@
 import numpy as np
 from numba import njit
-from mVORTEX import mVORTEX
+from tombo.mVORTEX import mVORTEX
 
 @njit(cache=True)
 def cross_vel_B_by_T(Xb, nXb, Xt, GAMA, nXt, RCUT, LCUT):

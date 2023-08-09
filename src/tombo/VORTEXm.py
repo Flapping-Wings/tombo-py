@@ -1,6 +1,6 @@
 import numpy as np
 from numba import njit
-import globals as g
+import tombo.globals as g
 
 @njit(cache=True)
 def VORTEXm(x, y, z, X1, Y1, Z1, X2, Y2, Z2, GAMA, RCUT):
