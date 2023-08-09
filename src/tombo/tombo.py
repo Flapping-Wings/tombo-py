@@ -29,8 +29,9 @@ from tombo.vel_by import vel_by
 def tombo():
     # SETUP
     # -----
-    create_directories(g.data_folder)
-    copyfile('config.toml', f'{g.output_folder}/config.toml')
+    if g.save_data:
+        create_directories(g.data_folder)
+        copyfile('config.toml', f'{g.output_folder}/config.toml')
 
     xb_f, nxb_f, nb_f, xc_f, nxc_f, nc_f, l_f, c_f, h_f = \
         symmetric_5_sided_mesh('f', g.lt_f, g.lr_f, g.bang_f, g.hfactor_f, g.wfactor_f)
@@ -223,16 +224,17 @@ def tombo():
         GAM_r[1, 0:nxt_r] = GAMA[(2 * nxt_f + nxt_r):(2 * nxt_f + 2 * nxt_r)]  # Rear left  wing
 
         # Save data for plotting GAMA
-        for i in range(g.nwing):
-            np.savez(f'{g.data_folder}/GAMA/GAMA_{g.labels[0][i]}_{t:.4f}',
-                        GAMA=GAM_f[i], XC=XC_f[..., i], NC=NC_f[..., i])
-            np.savez(f'{g.data_folder}/GAMA/GAMA_{g.labels[1][i]}_{t:.4f}',
-                        GAMA=GAM_r[i], XC=XC_r[..., i], NC=NC_r[..., i])
+        if g.save_data:
+            for i in range(g.nwing):
+                np.savez(f'{g.data_folder}/GAMA/GAMA_{g.labels[0][i]}_{t:.4f}',
+                            GAMA=GAM_f[i], XC=XC_f[..., i], NC=NC_f[..., i])
+                np.savez(f'{g.data_folder}/GAMA/GAMA_{g.labels[1][i]}_{t:.4f}',
+                            GAMA=GAM_r[i], XC=XC_r[..., i], NC=NC_r[..., i])
 
-        # Save data for plotting wakes
-        np.savez(f'{g.data_folder}/wake/wake_{istep}',
-                    nXb_f=nxb_f, nXw_f=nxw_f, Xb_f=Xb_f, Xw_f=Xw_f,
-                    nXb_r=nxb_r, nXw_r=nxw_r, Xb_r=Xb_r, Xw_r=Xw_r)
+            # Save data for plotting wakes
+            np.savez(f'{g.data_folder}/wake/wake_{istep}',
+                        nXb_f=nxb_f, nXw_f=nxw_f, Xb_f=Xb_f, Xw_f=Xw_f,
+                        nXb_r=nxb_r, nXw_r=nxw_r, Xb_r=Xb_r, Xw_r=Xw_r)
 
         if g.nstep > 3:  # At least 4 steps needed to calculate forces and moments
             # Calculate impulses in the body-translating system
