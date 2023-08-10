@@ -1,0 +1,140 @@
+[general]
+# Linear equation solver: 
+# - forward elim/backward sub (False),
+# - backslash (True)
+solver = false
+# Toggle debugging
+idebg = true
+# Toggle output data being saved (disable for testing)
+save_data = false
+
+[plotting]
+# Folder for generated data and plots
+output_folder = "output"
+# Folder for data used for plotting
+data_folder = "output/data"
+# Folder for generated plots
+plot_folder = "output/plots"
+# Labels used in filenames
+# - front right
+# - front left
+# - rear right
+# - rear left)
+labels = [['fr', 'fl'], ['rr', 'rl']]
+
+    # Enable/disble plotting for each category
+    [plotting.plot_enabled]
+    mesh2d = false
+    mesh3d = false
+    airfoil_vel = false
+    GAMA = false
+    wake = false
+    force = false
+    moment = false
+
+
+[time]
+# Time increment
+dt = 0.1
+# Number of time steps to iterate through
+nstep = 4
+
+
+[body_geometry]
+# Total number of wings (constant)
+twing = 4
+# Number of front/rear wings (constant)
+nwing = 2
+# Body angle in degrees
+delta_ = 0.0
+# Front wing location in cm
+b_f = -1.5
+# Rear wing location in cm 
+b_r = 1.5
+
+
+[wing_geometry]
+# Camber direction: 
+# - 0: no camber
+# - 1: x-direction
+# - 2: y-direction
+# - 3: both directions
+icamber = 0
+# Camber amplitude
+acamber = 0.2
+
+# Ratio of border element height to wing chord length (front)
+hfactor_f = 0.1
+# Ratio of border element width to border element height (front)
+wfactor_f = 3
+# Ratio of border element height to wing chord length (rear)
+hfactor_r = 0.1
+# Ratio of border element width to border element height (rear)
+wfactor_r = 3
+
+# Length of tapered section of the wing in cm (front)
+lt_f = 2
+# Length of straight section of the wing in cm (front)
+lr_f = 2
+# Length of tapered section of the wing in cm (rear)
+lt_r = 1
+# Length of straight section of the wing in cm (rear)
+lr_r = 1
+
+# Base angle (angle between tapered edge and centerline) of the wing in degrees (front)
+bang_f = 30
+# Base angle (angle between tapered edge and centerline) of the wing in degrees (rear)
+bang_r = 30
+
+# Toggle fixed number of border elements
+ielong = false
+
+
+[wing_motion]
+# Top stroke angle in degrees
+phiT_ = [80.0, 80.0, 80.0, 80.0]
+# Bottom stroke angle in degrees
+phiB_ = [-45.0, -45.0, -45.0, -45.0]
+# Rotation axis offset in cm
+a_ = [0.0, 0.0, 0.0, 0.0]
+# Stroke plane angle in degrees wrt the body axis
+beta_ = [90.0, 90.0, 90.0, 90.0]
+# Flapping frequency in Hz
+f_ = [30.0, 30.0, 30.0, 30.0]
+# Max rotation amplitude in degrees; actual rotation is 2 * gMax_
+gMax_ = [30.0, 30.0, 30.0, 30.0]
+# Rotation speed parameter (nondimensional); must be >= 4
+p = [5.0, 5.0, 5.0, 5.0]
+# Rotation timing offset (nondimensional):
+# - -0.5 < rtOff < 0.5
+# - rtOff < 0 (advanced)
+# - rtOff = 0 (symmetric)
+# - rtOff > 0 (delayed)
+rtOff = [0.0, 0.0, 0.0, 0.0]
+# Phase shift for the time (nondimensional) (0 <= tau < 2):
+# -     tau = 0 (start from top, start with down stroke)
+# - 0 < tau < 1 (start in between, start with down stroke)
+# -     tau = 1 (start from bottom, start wtih up stroke)
+# - 1 < tau < 2 (start in between, start with up stroke)
+tau = [0.0, 0.0, 0.0, 0.0]
+# Motion path parameter:
+# - 0: noTail Standard flapping(sinusoidal) & rotation (smoothed step func)
+# - 1: td = 1 (DUTail),   nhp = 4 (2 periods)     
+# - 2: td = 2 (UDTail),   nhp = 4 (2 periods) 
+# - 3: td = 1 (DUDUTail), nhp = 8 (4 periods) 
+# - 4: td = 2 (UDUDTail), nhp = 8 (4 periods) 
+# - 5: ctct(UDTailUTail), nhp = 4
+mpath = [0, 0, 0, 0]
+
+
+[fluid]
+# Air density
+rho_ = 0.001225
+# Ambient velocity in (x, y, z); can be interpreted as the flight velocity
+# when the wind is calm
+U_ = [100.0, 0.0, 0.0]
+
+
+[tolerance]
+# Distance between source and observation points to be judged as zero
+RCUT = 1.0e-10
