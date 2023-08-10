@@ -1,11 +1,11 @@
 import os
 import argparse
 import tombo.globals as g
-from tombo.tombo import tombo
+from tombo.simulate import run_simulation
 from tombo.plotting import create_directories, generate_plots, view_plot
 
 def tombo2(parser, args):
-    tombo()
+    run_simulation()
 
 def generate_plots2(parser, args):
     if not os.path.isdir(args.data_folder):
@@ -21,7 +21,7 @@ def view_plot2(parser, args):
     view_plot(args.data_file)
 
 def sim_and_plot(parser, args):
-    tombo()
+    run_simulation()
     create_directories(g.plot_folder)
     generate_plots(g.data_folder, args.all)
 
