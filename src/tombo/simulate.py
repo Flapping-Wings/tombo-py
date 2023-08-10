@@ -26,7 +26,7 @@ from tombo.force_moment import force_moment
 from tombo.vel_by import vel_by
 
 
-def tombo():
+def simulate():
     # SETUP
     # -----
     create_directories(g.data_folder)
