@@ -26,12 +26,9 @@ from tombo.force_moment import force_moment
 from tombo.vel_by import vel_by
 
 
-def tombo():
+def simulate():
     # SETUP
     # -----
-    create_directories(g.data_folder)
-    copyfile('config.toml', f'{g.output_folder}/config.toml')
-
     xb_f, nxb_f, nb_f, xc_f, nxc_f, nc_f, l_f, c_f, h_f = \
         symmetric_5_sided_mesh('f', g.lt_f, g.lr_f, g.bang_f, g.hfactor_f, g.wfactor_f)
     xb_r, nxb_r, nb_r, xc_r, nxc_r, nc_r, l_r, c_r, h_r = \
@@ -395,6 +392,10 @@ def tombo():
                      limpa_f, limpa_r, aimpa_f, aimpa_r,
                      limpw_f, limpw_r, aimpw_f, aimpw_r)
 
+def run_simulation():
+    create_directories(g.data_folder)
+    copyfile('config.toml', f'{g.output_folder}/config.toml')
+    simulate()
 
 if __name__ == "__main__":
-    tombo()
+    run_simulation()
