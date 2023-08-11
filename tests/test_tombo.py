@@ -497,3 +497,46 @@ def test_vel_B_by_T(matlab_loop_data):
 
     npt.assert_allclose(VBTs_f, matlab_loop_data['VBTs_f'])
     npt.assert_allclose(VBTs_r, matlab_loop_data['VBTs_r'])
+
+def test_cross_vel_B_by_T(matlab_loop_data):
+    from tombo.cross_vel_B_by_T import cross_vel_B_by_T
+
+    LCUT = matlab_loop_data['LCUT']
+
+    Xb_f = matlab_loop_data['Xb_f']
+    Xt_f = matlab_loop_data['Xt_f']
+    GAM_f = np.ascontiguousarray(matlab_loop_data['GAM_f'])
+    nxb_f = matlab_loop_data['nxb_f']
+    nxt_f = matlab_loop_data['nxt_f']
+
+    Xb_r = matlab_loop_data['Xb_r']
+    Xt_r = matlab_loop_data['Xt_r']
+    GAM_r = np.ascontiguousarray(matlab_loop_data['GAM_r'])
+    nxb_r = matlab_loop_data['nxb_r']
+    nxt_r = matlab_loop_data['nxt_r']
+
+    VBTs_12 = cross_vel_B_by_T(Xb_f[..., 0], nxb_f, Xt_f[..., 1], GAM_f[1, :], nxt_f, g.RCUT, LCUT)
+    VBTs_13 = cross_vel_B_by_T(Xb_f[..., 0], nxb_f, Xt_r[..., 0], GAM_r[0, :], nxt_r, g.RCUT, LCUT)
+    VBTs_14 = cross_vel_B_by_T(Xb_f[..., 0], nxb_f, Xt_r[..., 1], GAM_r[1, :], nxt_r, g.RCUT, LCUT)
+    VBTs_21 = cross_vel_B_by_T(Xb_f[..., 1], nxb_f, Xt_f[..., 0], GAM_f[0, :], nxt_f, g.RCUT, LCUT)
+    VBTs_23 = cross_vel_B_by_T(Xb_f[..., 1], nxb_f, Xt_r[..., 0], GAM_r[0, :], nxt_r, g.RCUT, LCUT)
+    VBTs_24 = cross_vel_B_by_T(Xb_f[..., 1], nxb_f, Xt_r[..., 1], GAM_r[1, :], nxt_r, g.RCUT, LCUT)
+    VBTs_31 = cross_vel_B_by_T(Xb_r[..., 0], nxb_r, Xt_f[..., 0], GAM_f[0, :], nxt_f, g.RCUT, LCUT)
+    VBTs_32 = cross_vel_B_by_T(Xb_r[..., 0], nxb_r, Xt_f[..., 1], GAM_f[1, :], nxt_f, g.RCUT, LCUT)
+    VBTs_34 = cross_vel_B_by_T(Xb_r[..., 0], nxb_r, Xt_r[..., 1], GAM_r[1, :], nxt_r, g.RCUT, LCUT)
+    VBTs_41 = cross_vel_B_by_T(Xb_r[..., 1], nxb_r, Xt_f[..., 0], GAM_f[0, :], nxt_f, g.RCUT, LCUT)
+    VBTs_42 = cross_vel_B_by_T(Xb_r[..., 1], nxb_r, Xt_f[..., 1], GAM_f[1, :], nxt_f, g.RCUT, LCUT)
+    VBTs_43 = cross_vel_B_by_T(Xb_r[..., 1], nxb_r, Xt_r[..., 0], GAM_r[0, :], nxt_r, g.RCUT, LCUT)
+
+    npt.assert_allclose(VBTs_12, matlab_loop_data['VBTs_12'])
+    npt.assert_allclose(VBTs_13, matlab_loop_data['VBTs_13'])
+    npt.assert_allclose(VBTs_14, matlab_loop_data['VBTs_14'])
+    npt.assert_allclose(VBTs_21, matlab_loop_data['VBTs_21'])
+    npt.assert_allclose(VBTs_23, matlab_loop_data['VBTs_23'])
+    npt.assert_allclose(VBTs_24, matlab_loop_data['VBTs_24'])
+    npt.assert_allclose(VBTs_31, matlab_loop_data['VBTs_31'])
+    npt.assert_allclose(VBTs_32, matlab_loop_data['VBTs_32'])
+    npt.assert_allclose(VBTs_34, matlab_loop_data['VBTs_34'])
+    npt.assert_allclose(VBTs_41, matlab_loop_data['VBTs_41'])
+    npt.assert_allclose(VBTs_42, matlab_loop_data['VBTs_42'])
+    npt.assert_allclose(VBTs_43, matlab_loop_data['VBTs_43'])
