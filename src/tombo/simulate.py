@@ -120,9 +120,6 @@ def simulate():
     MVNs_r = lr_set_matrix(xt_r, nxt_r, xC_r, nC_r, g.RCUT)
 
     for istep in range(g.nstep):       
-        if g.idebg:
-            data = loadmat(f"matlab_data/data{istep + 1}.mat")
-
         t = istep * g.dt
 
         # Get wing motion parameters
@@ -147,11 +144,6 @@ def simulate():
                 lr_mass_L2GT(i, beta[i + 2], delta, phi[i + 2], theta[i + 2], a[i + 2], U, t, b_r,
                              xc_r, xb_r, xt_r, xC_r, nC_r)
 
-        if g.idebg:
-            print(f"Xc {istep + 1}")
-            print(np.allclose(Xc_f, data['Xc_f'], atol=1e-16))
-            print(np.allclose(Xc_r, data['Xc_r'], atol=1e-16))
-
         # Find velocity of the wing
         for i in range(g.nwing):
             # Front wing
@@ -160,11 +152,6 @@ def simulate():
             # Rear wing
             Vnc_r[i, :] = lrs_wing_NVs(1, i, xC_r, XC_r[:, :, i], NC_r[:, :, i], t, theta[i + 2],
                                        phi[i + 2], dph[i + 2], dth[i + 2], a[i + 2], beta[i + 2], U)
-
-        if g.idebg:
-            print(f"Vnc {istep + 1}")
-            print(np.allclose(Vnc_f, data['Vnc_f'], atol=1e-16))
-            print(np.allclose(Vnc_r, data['Vnc_r'], atol=1e-16))
 
         # Normal vel on each airfoil by front & rear, right & left wake vortices
         # For each wing, there are 4 wake vortex contributions
@@ -175,11 +162,6 @@ def simulate():
             # Rear wing  
             Vncw_r[i, :] = n_vel_T_by_W(istep, nxt_r, XC_r[:, :, i], NC_r[:, :, i],
                                         Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
-
-        if g.idebg:
-            print(f"Vncw {istep + 1}")
-            print(np.allclose(Vncw_f, data['Vncw_f'], atol=1e-16))
-            print(np.allclose(Vncw_r, data['Vncw_r'], atol=1e-16))
 
         # Calculation of the time-dependent sub-matrices MVNs_ij (i~=j)
         MVNs_12 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_f[:, :, :, 1], nxt_f, g.RCUT)
@@ -204,11 +186,6 @@ def simulate():
 
         # Solve the system of equations
         GAMA = solution(nxt_f, nxt_r, MVN, Vnc_f, Vncw_f, Vnc_r, Vncw_r)
-
-        if g.idebg:
-            print(f"MVN and GAMA {istep + 1}:")
-            print(np.allclose(MVN, data['MVN'], atol=1e-16))
-            print(np.allclose(GAMA, data['GAMA'], atol=1e-16))
 
         # Split GAMA into 4 parts
         GAM_f = np.zeros((2, nxt_f))
@@ -257,25 +234,9 @@ def simulate():
                     limpw_r[j, istep, w] = limpw[j, w]
                     aimpw_r[j, istep, w] = aimpw[j, w]
 
-        if g.idebg:
-            print(f"Impulse arrays {istep + 1}:")
-            print(np.allclose(data['limpa_f'], limpa_f, atol=1e-16))
-            print(np.allclose(data['aimpa_f'], aimpa_f, atol=1e-16))
-            print(np.allclose(data['limpw_f'], limpw_f, atol=1e-16))
-            print(np.allclose(data['aimpw_f'], aimpw_f, atol=1e-16))
-            print(np.allclose(data['limpa_r'], limpa_r, atol=1e-16))
-            print(np.allclose(data['aimpa_r'], aimpa_r, atol=1e-16))
-            print(np.allclose(data['limpw_r'], limpw_r, atol=1e-16))
-            print(np.allclose(data['aimpw_r'], aimpw_r, atol=1e-16))
-
         # Extract GAMAb (border & shed) from GAM
         GAMAb_f = GAM_f[:, :nxb_f].copy()
         GAMAb_r = GAM_r[:, :nxb_r].copy()
-
-        if g.idebg:
-            print(f"GAMAb {istep + 1}:")
-            print(np.allclose(GAMAb_f, data['GAMAb_f'], atol=1e-16))
-            print(np.allclose(GAMAb_r, data['GAMAb_r'], atol=1e-16))
 
         # Calculate velocity of border and wake vortices to be shed or convected
         # Influence coeff for the border elem vel due to the total wing elem
@@ -283,20 +244,10 @@ def simulate():
         cVBT_f = b_vel_B_by_T_matrix(nxb_f, nxt_f, Xb_f, Xt_f, g.RCUT)
         cVBT_r = b_vel_B_by_T_matrix(nxb_r, nxt_r, Xb_r, Xt_r, g.RCUT)
 
-        if g.idebg:
-            print(f"cVBT {istep + 1}:")
-            print(np.allclose(cVBT_f, data['cVBT_f'], atol=1e-16))
-            print(np.allclose(cVBT_r, data['cVBT_r'], atol=1e-16))
-
         # Border element veocity due to the total wing elements: self-influence
         # VBTs_m(j,n,ixb,w);  vel on wing w due to total elem on wing w
         VBTs_f = vel_B_by_T(cVBT_f, GAM_f, nxt_f)
         VBTs_r = vel_B_by_T(cVBT_r, GAM_r, nxt_r)
-
-        if g.idebg:
-            print(f"VBTs {istep + 1}:")
-            print(np.allclose(VBTs_f, data['VBTs_f'], atol=1e-16))
-            print(np.allclose(VBTs_r, data['VBTs_r'], atol=1e-16))
 
         # Border element veocity due to the total wing elements: cross-influence
         VBTs_12 = cross_vel_B_by_T(Xb_f[..., 0], nxb_f, Xt_f[..., 1], GAM_f[1, :], nxt_f, g.RCUT, LCUT)
@@ -315,11 +266,6 @@ def simulate():
         # Assemble the total border element velocity due to two wings
         VBT_f, VBT_r = assemble_vel_B_by_T(nxb_f, VBTs_f, VBTs_12, VBTs_13, VBTs_14, VBTs_21, VBTs_23, VBTs_24,
                                            nxb_r, VBTs_r, VBTs_31, VBTs_32, VBTs_34, VBTs_41, VBTs_42, VBTs_43)
-
-        if g.idebg:
-            print(f"VBT {istep + 1}:")
-            print(np.allclose(VBT_f, data['VBT_f'], atol=1e-16))
-            print(np.allclose(VBT_r, data['VBT_r'], atol=1e-16))
 
         # Velocity from wake vortices
         if istep > 0:
@@ -344,16 +290,6 @@ def simulate():
                 VWW_r[..., :istep * nxb_r, i] = vel_by(istep, Xw_r[..., i], nxw_r, Xw_f, GAMw_f, nxw_f,
                                                               Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
 
-        if g.idebg:
-            print(f"VBW, VWT, VWW {istep + 1}:")
-            print(np.allclose(VBW_f, data['VBW_f'], atol=1e-16))
-            print(np.allclose(VBW_r, data['VBW_r'], atol=1e-16))
-            if istep > 0:
-                print(np.allclose(VWT_f[:, :, :nxw_f, :], data['VWT_f'], atol=1e-16))
-                print(np.allclose(VWT_r[:, :, :nxw_r, :], data['VWT_r'], atol=1e-16))
-                print(np.allclose(VWW_f[:, :, :nxw_f, :], data['VWW_f'], atol=1e-16))
-                print(np.allclose(VWW_r[:, :, :nxw_r, :], data['VWW_r'], atol=1e-16))
-
         # Shed border vortex elements
         Xs_f = Xb_f + g.dt * (VBT_f + VBW_f)
         Xs_r = Xb_r + g.dt * (VBT_r + VBW_r)
@@ -376,15 +312,6 @@ def simulate():
         else:
             GAMw_f, nxw_f, Xw_f = add_wake(istep, nxb_f, GAMAb_f, Xs_f, GAMw_f, Xw_f)
             GAMw_r, nxw_r, Xw_r = add_wake(istep, nxb_r, GAMAb_r, Xs_r, GAMw_r, Xw_r)
-
-        if g.idebg:
-            print(f"End {istep + 1}:")
-            print(np.allclose(GAMw_f, data['GAMw_f'], atol=1e-16))
-            print(np.allclose(nxw_f, data['nxw_f'], atol=1e-16))
-            print(np.allclose(Xw_f[:, :, :nxw_f, :], data['Xw_f'], atol=1e-16))
-            print(np.allclose(GAMw_r, data['GAMw_r'], atol=1e-16))
-            print(np.allclose(nxt_r, data['nxt_r'], atol=1e-16))
-            print(np.allclose(Xw_r[:, :, :nxw_r, :], data['Xw_r'], atol=1e-16))
     # END TIME MARCH
 
     # Calculate the force and moment on the airfoil
