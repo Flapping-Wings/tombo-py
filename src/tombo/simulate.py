@@ -136,11 +136,11 @@ def simulate():
         # Get global coordinates of the points on the wing
         for i in range(g.nwing):
             # Front wing
-            Xc_f[:, :, :, i], Xb_f[:, :, :, i], Xt_f[:, :, :, i], XC_f[:, :, i], NC_f[:, :, i] = \
+            Xc_f[..., i], Xb_f[..., i], Xt_f[..., i], XC_f[..., i], NC_f[..., i] = \
                 lr_mass_L2GT(i, beta[i], delta, phi[i], theta[i], a[i], U, t, b_f,
                              xc_f, xb_f, xt_f, xC_f, nC_f)
             # Rear wing                                                                       
-            Xc_r[:, :, :, i], Xb_r[:, :, :, i], Xt_r[:, :, :, i], XC_r[:, :, i], NC_r[:, :, i] = \
+            Xc_r[..., i], Xb_r[..., i], Xt_r[..., i], XC_r[..., i], NC_r[..., i] = \
                 lr_mass_L2GT(i, beta[i + 2], delta, phi[i + 2], theta[i + 2], a[i + 2], U, t, b_r,
                              xc_r, xb_r, xt_r, xC_r, nC_r)
 
@@ -164,18 +164,18 @@ def simulate():
                                         Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
 
         # Calculation of the time-dependent sub-matrices MVNs_ij (i~=j)
-        MVNs_12 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_f[:, :, :, 1], nxt_f, g.RCUT)
-        MVNs_13 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_r[:, :, :, 0], nxt_r, g.RCUT)
-        MVNs_14 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_r[:, :, :, 1], nxt_r, g.RCUT)
-        MVNs_21 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_f[:, :, :, 0], nxt_f, g.RCUT)
-        MVNs_23 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_r[:, :, :, 0], nxt_r, g.RCUT)
-        MVNs_24 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_r[:, :, :, 1], nxt_r, g.RCUT)
-        MVNs_31 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_f[:, :, :, 0], nxt_f, g.RCUT)
-        MVNs_32 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_f[:, :, :, 1], nxt_f, g.RCUT)
-        MVNs_34 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_r[:, :, :, 1], nxt_r, g.RCUT)
-        MVNs_41 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_f[:, :, :, 0], nxt_f, g.RCUT)
-        MVNs_42 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_f[:, :, :, 1], nxt_f, g.RCUT)
-        MVNs_43 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_r[:, :, :, 0], nxt_r, g.RCUT)
+        MVNs_12 = cross_matrix(XC_f[..., 0], NC_f[..., 0], nxt_f, Xt_f[..., 1], nxt_f, g.RCUT)
+        MVNs_13 = cross_matrix(XC_f[..., 0], NC_f[..., 0], nxt_f, Xt_r[..., 0], nxt_r, g.RCUT)
+        MVNs_14 = cross_matrix(XC_f[..., 0], NC_f[..., 0], nxt_f, Xt_r[..., 1], nxt_r, g.RCUT)
+        MVNs_21 = cross_matrix(XC_f[..., 1], NC_f[..., 1], nxt_f, Xt_f[..., 0], nxt_f, g.RCUT)
+        MVNs_23 = cross_matrix(XC_f[..., 1], NC_f[..., 1], nxt_f, Xt_r[..., 0], nxt_r, g.RCUT)
+        MVNs_24 = cross_matrix(XC_f[..., 1], NC_f[..., 1], nxt_f, Xt_r[..., 1], nxt_r, g.RCUT)
+        MVNs_31 = cross_matrix(XC_r[..., 0], NC_r[..., 0], nxt_r, Xt_f[..., 0], nxt_f, g.RCUT)
+        MVNs_32 = cross_matrix(XC_r[..., 0], NC_r[..., 0], nxt_r, Xt_f[..., 1], nxt_f, g.RCUT)
+        MVNs_34 = cross_matrix(XC_r[..., 0], NC_r[..., 0], nxt_r, Xt_r[..., 1], nxt_r, g.RCUT)
+        MVNs_41 = cross_matrix(XC_r[..., 1], NC_r[..., 1], nxt_r, Xt_f[..., 0], nxt_f, g.RCUT)
+        MVNs_42 = cross_matrix(XC_r[..., 1], NC_r[..., 1], nxt_r, Xt_f[..., 1], nxt_f, g.RCUT)
+        MVNs_43 = cross_matrix(XC_r[..., 1], NC_r[..., 1], nxt_r, Xt_r[..., 0], nxt_r, g.RCUT)
 
         # Assemble the total matrix using MVNs_f[:,:,1], MVNs_r[:,:,1], MVNs_ij[:,:]
         MVN = assemble_matrix(MVNs_f, MVNs_r,
