@@ -480,3 +480,20 @@ def test_b_vel_B_by_T_matrix(matlab_loop_data):
 
     npt.assert_allclose(cVBT_f, matlab_loop_data['cVBT_f'])
     npt.assert_allclose(cVBT_r, matlab_loop_data['cVBT_r'])
+
+def test_vel_B_by_T(matlab_loop_data):
+    from tombo.vel_B_by_T import vel_B_by_T
+
+    cVBT_f = matlab_loop_data['cVBT_f']
+    cVBT_r = matlab_loop_data['cVBT_r']
+
+    GAM_f = matlab_loop_data['GAM_f']
+    nxt_f = matlab_loop_data['nxt_f']
+    GAM_r = matlab_loop_data['GAM_r']
+    nxt_r = matlab_loop_data['nxt_r']
+
+    VBTs_f = vel_B_by_T(cVBT_f, GAM_f, nxt_f)
+    VBTs_r = vel_B_by_T(cVBT_r, GAM_r, nxt_r)
+
+    npt.assert_allclose(VBTs_f, matlab_loop_data['VBTs_f'])
+    npt.assert_allclose(VBTs_r, matlab_loop_data['VBTs_r'])
