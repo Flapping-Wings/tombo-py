@@ -267,3 +267,45 @@ def test_lrs_wing_NVs(matlab_loop_data):
         
     npt.assert_allclose(Vnc_f, matlab_loop_data['Vnc_f'])
     npt.assert_allclose(Vnc_r, matlab_loop_data['Vnc_r'])
+
+def test_n_vel_T_by_W(matlab_loop_data):
+    from tombo.n_vel_T_by_W import n_vel_T_by_W
+
+    istep = matlab_loop_data['istep'] - 1 # Convert from MATLAB indexing
+    LCUT = matlab_loop_data['LCUT']
+
+    nxt_f = matlab_loop_data['nxt_f']
+    nxt_r = matlab_loop_data['nxt_r']
+
+    XC_f = matlab_loop_data['XC_f']
+    NC_f = matlab_loop_data['NC_f']
+    XC_r = matlab_loop_data['XC_r']
+    NC_r = matlab_loop_data['NC_r']
+
+    nxb_f = matlab_loop_data['nxb_f']
+    nxw_f = matlab_loop_data['nxw_f']
+    GAMw_f = np.ascontiguousarray(matlab_loop_data['GAMw_f'])
+
+    nxb_r = matlab_loop_data['nxb_r']
+    nxw_r = matlab_loop_data['nxw_r']
+    GAMw_r = np.ascontiguousarray(matlab_loop_data['GAMw_r'])
+
+    up_to_f = GAMw_f.shape[1]
+    Xw_f = np.empty((3, 4, nxb_f * g.nstep, g.nwing))
+    Xw_f[:, :, :up_to_f] = matlab_loop_data['Xw_f']
+    
+    up_to_r = GAMw_r.shape[1]
+    Xw_r = np.empty((3, 4, nxb_r * g.nstep, g.nwing))
+    Xw_r[:, :, :up_to_r] = matlab_loop_data['Xw_r']
+
+    Vncw_f = np.empty((g.nwing, nxt_r))
+    Vncw_r = np.empty((g.nwing, nxt_f))
+
+    for i in range(g.nwing):
+        Vncw_f[i, :] = n_vel_T_by_W(istep, nxt_f, XC_f[..., i], NC_f[..., i],
+                                    Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
+        Vncw_r[i, :] = n_vel_T_by_W(istep, nxt_r, XC_r[..., i], NC_r[..., i],
+                                    Xw_f, GAMw_f, nxw_f, Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
+        
+    npt.assert_allclose(Vncw_f, matlab_loop_data['Vncw_f'])
+    npt.assert_allclose(Vncw_r, matlab_loop_data['Vncw_r'])
