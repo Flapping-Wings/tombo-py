@@ -461,3 +461,22 @@ def test_s_impulse_WT(matlab_loop_data):
     npt.assert_allclose(aimpa_r, matlab_loop_data['aimpa_r'])
     npt.assert_allclose(limpw_r, matlab_loop_data['limpw_r'])
     npt.assert_allclose(aimpw_r, matlab_loop_data['aimpw_r'])
+
+def test_b_vel_B_by_T_matrix(matlab_loop_data):
+    from tombo.b_vel_B_by_T_matrix import b_vel_B_by_T_matrix
+
+    nxb_f = matlab_loop_data['nxb_f']
+    nxt_f = matlab_loop_data['nxt_f']
+    Xb_f = matlab_loop_data['Xb_f']
+    Xt_f = matlab_loop_data['Xt_f']
+
+    nxb_r = matlab_loop_data['nxb_r']
+    nxt_r = matlab_loop_data['nxt_r']
+    Xb_r = matlab_loop_data['Xb_r']
+    Xt_r = matlab_loop_data['Xt_r']
+
+    cVBT_f = b_vel_B_by_T_matrix(nxb_f, nxt_f, Xb_f, Xt_f, g.RCUT)
+    cVBT_r = b_vel_B_by_T_matrix(nxb_r, nxt_r, Xb_r, Xt_r, g.RCUT)
+
+    npt.assert_allclose(cVBT_f, matlab_loop_data['cVBT_f'])
+    npt.assert_allclose(cVBT_r, matlab_loop_data['cVBT_r'])
