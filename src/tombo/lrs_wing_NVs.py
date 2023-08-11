@@ -68,7 +68,8 @@ def lrs_wing_NVs(m, iwing, xC, XC, NC, t, theta, phi, dph, dth, a, beta, U):
     # Save data for plotting
     labels = [['fr', 'fl'], ['rr', 'rl']]
 
-    np.savez(f'{g.data_folder}/airfoil_vel/airfoil_vel_{labels[m][iwing]}_{t:.4f}',
-             Vnc=Vnc, XC=XC, NC=NC)
+    if g.save_data:
+        np.savez(f'{g.data_folder}/airfoil_vel/airfoil_vel_{labels[m][iwing]}_{t:.4f}',
+                 Vnc=Vnc, XC=XC, NC=NC)
     
     return Vnc

@@ -4,8 +4,7 @@
 # - backslash (True)
 solver = false
 # Toggle output data being saved (disable for testing)
-save_data = true
-
+save_data = false
 
 [plotting]
 # Folder for generated data and plots
@@ -23,13 +22,13 @@ labels = [['fr', 'fl'], ['rr', 'rl']]
 
     # Enable/disble plotting for each category
     [plotting.plot_enabled]
-    mesh2d = true
-    mesh3d = true
-    airfoil_vel = true
-    GAMA = true
-    wake = true
-    force = true
-    moment = true
+    mesh2d = false
+    mesh3d = false
+    airfoil_vel = false
+    GAMA = false
+    wake = false
+    force = false
+    moment = false
 
 
 [time]

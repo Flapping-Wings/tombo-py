@@ -54,11 +54,12 @@ def symmetric_5_sided_mesh(wing, lt_, lr_, bang_, hfactor, wfactor):
     Xb, nXb, Nb, Lt, Lr, C, n, wi_1 = WingBorder(lt_, lr_, bang, l_, c_, hfactor, wfactor)
     Xc, nXc, Nc = WingCenter(Lt, Lr, C, bang, l_, c_, h, n, wi_1, is_tapered)
 
-    # Save data for plotting
-    np.savez(f'{g.data_folder}/mesh2d/mesh2d_{wing}',
-             Xb=Xb, nXb=nXb, Xc=Xc, nXc=nXc)
-    np.savez(f'{g.data_folder}/mesh3d/mesh3d_{wing}',
-             Xb=Xb, nXb=nXb, Nb=Nb, Xc=Xc, nXc=nXc, Nc=Nc)
+    if g.save_data:
+        # Save data for plotting
+        np.savez(f'{g.data_folder}/mesh2d/mesh2d_{wing}',
+                 Xb=Xb, nXb=nXb, Xc=Xc, nXc=nXc)
+        np.savez(f'{g.data_folder}/mesh3d/mesh3d_{wing}',
+                 Xb=Xb, nXb=nXb, Nb=Nb, Xc=Xc, nXc=nXc, Nc=Nc)
        
     return Xb, nXb, Nb, Xc, nXc, Nc, l_, c_, h
 

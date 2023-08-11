@@ -18,10 +18,5 @@ dependencies = [
 [project.scripts]
 tombo = "tombo.__main__:main"
 
-# [project.optional-dependencies]
-# test = ["pytest>=6.0"]
-
-# [tool.pytest.ini_options]
-# minversion = "6.0"
-# addopts = ["--import-mode=importlib"]
-# testpaths = ["tests"]
+[project.optional-dependencies]
+test = ["pytest>=6.0"]

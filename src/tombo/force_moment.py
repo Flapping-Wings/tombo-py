@@ -112,18 +112,19 @@ def force_moment(rho_, v_, d_, nstep, dt, U,
     momenty = -m_ * momenty
     momentz = -m_ * momentz
 
-    # Save data for plotting forces
-    np.savez(f'{g.data_folder}/force/force_x',
-             times=times, force=forcex)
-    np.savez(f'{g.data_folder}/force/force_y',
-             times=times, force=forcey)
-    np.savez(f'{g.data_folder}/force/force_z',
-             times=times, force=forcez)
+    if g.save_data:
+        # Save data for plotting forces
+        np.savez(f'{g.data_folder}/force/force_x',
+                times=times, force=forcex)
+        np.savez(f'{g.data_folder}/force/force_y',
+                times=times, force=forcey)
+        np.savez(f'{g.data_folder}/force/force_z',
+                times=times, force=forcez)
 
-    # Save data for plotting moments
-    np.savez(f'{g.data_folder}/moment/moment_x',
-             times=times, moment=momentx)
-    np.savez(f'{g.data_folder}/moment/moment_y',
-             times=times, moment=momenty)
-    np.savez(f'{g.data_folder}/moment/moment_z',
-             times=times, moment=momentz)
+        # Save data for plotting moments
+        np.savez(f'{g.data_folder}/moment/moment_x',
+                times=times, moment=momentx)
+        np.savez(f'{g.data_folder}/moment/moment_y',
+                times=times, moment=momenty)
+        np.savez(f'{g.data_folder}/moment/moment_z',
+                times=times, moment=momentz)

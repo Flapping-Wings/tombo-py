@@ -5,4 +5,3 @@ scipy
 matplotlib
 numba
 tomli
-pytest
