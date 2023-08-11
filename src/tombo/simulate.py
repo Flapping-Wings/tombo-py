@@ -1,6 +1,4 @@
 import numpy as np
-from scipy.io import loadmat
-
 from shutil import copyfile
 
 import tombo.globals as g
