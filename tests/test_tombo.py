@@ -540,3 +540,30 @@ def test_cross_vel_B_by_T(matlab_loop_data):
     npt.assert_allclose(VBTs_41, matlab_loop_data['VBTs_41'])
     npt.assert_allclose(VBTs_42, matlab_loop_data['VBTs_42'])
     npt.assert_allclose(VBTs_43, matlab_loop_data['VBTs_43'])
+
+def test_assemble_vel_B_by_T(matlab_loop_data):
+    from tombo.assemble_vel_B_by_T import assemble_vel_B_by_T
+
+    nxb_f = matlab_loop_data['nxb_f']
+    VBTs_f = matlab_loop_data['VBTs_f']
+    nxb_r = matlab_loop_data['nxb_r']
+    VBTs_r = matlab_loop_data['VBTs_r']
+
+    VBTs_12 = matlab_loop_data['VBTs_12']
+    VBTs_13 = matlab_loop_data['VBTs_13']
+    VBTs_14 = matlab_loop_data['VBTs_14']
+    VBTs_21 = matlab_loop_data['VBTs_21']
+    VBTs_23 = matlab_loop_data['VBTs_23']
+    VBTs_24 = matlab_loop_data['VBTs_24']
+    VBTs_31 = matlab_loop_data['VBTs_31']
+    VBTs_32 = matlab_loop_data['VBTs_32']
+    VBTs_34 = matlab_loop_data['VBTs_34']
+    VBTs_41 = matlab_loop_data['VBTs_41']
+    VBTs_42 = matlab_loop_data['VBTs_42']
+    VBTs_43 = matlab_loop_data['VBTs_43']
+
+    VBT_f, VBT_r = assemble_vel_B_by_T(nxb_f, VBTs_f, VBTs_12, VBTs_13, VBTs_14, VBTs_21, VBTs_23, VBTs_24,
+                                       nxb_r, VBTs_r, VBTs_31, VBTs_32, VBTs_34, VBTs_41, VBTs_42, VBTs_43)
+    
+    npt.assert_allclose(VBT_f, matlab_loop_data['VBT_f'])
+    npt.assert_allclose(VBT_r, matlab_loop_data['VBT_r'])
