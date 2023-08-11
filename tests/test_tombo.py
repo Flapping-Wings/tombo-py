@@ -567,3 +567,65 @@ def test_assemble_vel_B_by_T(matlab_loop_data):
     
     npt.assert_allclose(VBT_f, matlab_loop_data['VBT_f'])
     npt.assert_allclose(VBT_r, matlab_loop_data['VBT_r'])
+
+def test_vel_by(matlab_loop_data):
+    from tombo.vel_by import vel_by
+
+    istep = matlab_loop_data['istep'] - 1 # Convert from MATLAB indexing
+    LCUT = matlab_loop_data['LCUT']
+
+    nxb_f = matlab_loop_data['nxb_f']
+    nxb_r = matlab_loop_data['nxb_r']
+
+    Xb_f = matlab_loop_data['Xb_f']
+    Xw_f = matlab_loop_data['Xw_f']
+    GAMw_f = np.ascontiguousarray(matlab_loop_data['GAMw_f'])
+    GAM_f = np.ascontiguousarray(matlab_loop_data['GAM_f'])
+    Xt_f = matlab_loop_data['Xt_f']
+    nxw_f = matlab_loop_data['nxw_f']
+    nxt_f = matlab_loop_data['nxt_f']
+    
+    Xb_r = matlab_loop_data['Xb_r']
+    Xw_r = matlab_loop_data['Xw_r']
+    GAMw_r = np.ascontiguousarray(matlab_loop_data['GAMw_r'])
+    GAM_r = np.ascontiguousarray(matlab_loop_data['GAM_r'])
+    Xt_r = matlab_loop_data['Xt_r']
+    nxw_r = matlab_loop_data['nxw_r']
+    nxt_r = matlab_loop_data['nxt_r']
+
+    VBW_f = np.empty((3, 4, nxb_f, g.nwing))
+    VBW_r = np.empty((3, 4, nxb_r, g.nwing))
+    VWT_f = np.empty((3, 4, nxb_f * g.nstep, g.nwing))
+    VWT_r = np.empty((3, 4, nxb_r * g.nstep, g.nwing))
+    VWW_f = np.empty((3, 4, nxb_f * g.nstep, g.nwing))
+    VWW_r = np.empty((3, 4, nxb_r * g.nstep, g.nwing))
+
+    if istep > 0:
+        # Velocity of the border elements due to wake vortices
+        for i in range(g.nwing):
+            VBW_f[..., i] = vel_by(istep, Xb_f[..., i], nxb_f, Xw_f, GAMw_f, nxw_f, Xw_r,
+                                                GAMw_r, nxw_r, g.RCUT, LCUT)
+            VBW_r[..., i] = vel_by(istep, Xb_r[..., i], nxb_r, Xw_f, GAMw_f, nxw_f, Xw_r,
+                                                GAMw_r, nxw_r, g.RCUT, LCUT)
+
+        # Velocity of the wake elements due to total wing vortices
+        for i in range(g.nwing):
+            VWT_f[..., :istep * nxb_f, i] = vel_by(istep, Xw_f[..., i], nxw_f, Xt_f, GAM_f, nxt_f,
+                                                            Xt_r, GAM_r, nxt_r, g.RCUT, LCUT)
+            VWT_r[..., :istep * nxb_r, i] = vel_by(istep, Xw_r[:, :, :, i], nxw_r, Xt_f, GAM_f, nxt_f,
+                                                            Xt_r, GAM_r, nxt_r, g.RCUT, LCUT)
+
+        # Velocity of the wake elements due to wake elements
+        for i in range(g.nwing):
+            VWW_f[..., :istep * nxb_f, i] = vel_by(istep, Xw_f[..., i], nxw_f, Xw_f, GAMw_f, nxw_f,
+                                                            Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
+            VWW_r[..., :istep * nxb_r, i] = vel_by(istep, Xw_r[..., i], nxw_r, Xw_f, GAMw_f, nxw_f,
+                                                            Xw_r, GAMw_r, nxw_r, g.RCUT, LCUT)
+            
+        npt.assert_allclose(VBW_f, matlab_loop_data['VBW_f'])
+        npt.assert_allclose(VBW_r, matlab_loop_data['VBW_r'])
+        npt.assert_allclose(VWT_f[:, :, :nxw_f], matlab_loop_data['VWT_f'])
+        npt.assert_allclose(VWT_r[:, :, :nxw_r], matlab_loop_data['VWT_r'])
+        npt.assert_allclose(VWW_f[:, :, :nxw_f], matlab_loop_data['VWW_f'])
+        npt.assert_allclose(VWW_r[:, :, :nxw_r], matlab_loop_data['VWW_r'])
+
