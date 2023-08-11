@@ -233,3 +233,37 @@ def test_lr_mass_L2GT(matlab_loop_data):
     npt.assert_allclose(Xt_f, matlab_loop_data['Xt_f'])
     npt.assert_allclose(XC_f, matlab_loop_data['XC_f'])
     npt.assert_allclose(NC_f, matlab_loop_data['NC_f'])
+
+def test_lrs_wing_NVs(matlab_loop_data):
+    from tombo.lrs_wing_NVs import lrs_wing_NVs
+
+    nxt_f = matlab_loop_data['nxt_f']
+    nxt_r = matlab_loop_data['nxt_r']
+
+    xC_f = matlab_loop_data['xC_f']
+    XC_f = matlab_loop_data['XC_f']
+    NC_f = matlab_loop_data['NC_f']
+    xC_r = matlab_loop_data['xC_r']
+    XC_r = matlab_loop_data['XC_r']
+    NC_r = matlab_loop_data['NC_r']
+
+    t = matlab_loop_data['t']
+    theta = matlab_loop_data['theta']
+    phi = matlab_loop_data['phi']
+    dph = matlab_loop_data['dph']
+    dth = matlab_loop_data['dth']
+    a = matlab_loop_data['a']
+    beta = matlab_loop_data['beta']
+    U = matlab_loop_data['U']
+
+    Vnc_f = np.zeros((g.nwing, nxt_f))
+    Vnc_r = np.zeros((g.nwing, nxt_r))
+
+    for i in range(g.nwing):
+        Vnc_f[i, :] = lrs_wing_NVs(0, i, xC_f, XC_f[:, :, i], NC_f[:, :, i], t, theta[i],
+                                   phi[i], dph[i], dth[i], a[i], beta[i], U)
+        Vnc_r[i, :] = lrs_wing_NVs(1, i, xC_r, XC_r[:, :, i], NC_r[:, :, i], t, theta[i + 2],
+                                   phi[i + 2], dph[i + 2], dth[i + 2], a[i + 2], beta[i + 2], U)
+        
+    npt.assert_allclose(Vnc_f, matlab_loop_data['Vnc_f'])
+    npt.assert_allclose(Vnc_r, matlab_loop_data['Vnc_r'])
