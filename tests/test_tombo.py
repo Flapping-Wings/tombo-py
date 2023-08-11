@@ -348,3 +348,30 @@ def test_cross_matrix(matlab_loop_data):
     npt.assert_allclose(MVNs_41, matlab_loop_data['MVNs_41'])
     npt.assert_allclose(MVNs_42, matlab_loop_data['MVNs_42'])
     npt.assert_allclose(MVNs_43, matlab_loop_data['MVNs_43'])
+
+def test_assemble_matrix(matlab_loop_data):
+    from tombo.assemble_matrix import assemble_matrix
+
+    MVNs_f = matlab_loop_data['MVNs_f']
+    MVNs_r = matlab_loop_data['MVNs_r']
+
+    MVNs_12 = matlab_loop_data['MVNs_12']
+    MVNs_13 = matlab_loop_data['MVNs_13']
+    MVNs_14 = matlab_loop_data['MVNs_14']
+    MVNs_21 = matlab_loop_data['MVNs_21']
+    MVNs_23 = matlab_loop_data['MVNs_23']
+    MVNs_24 = matlab_loop_data['MVNs_24']
+    MVNs_31 = matlab_loop_data['MVNs_31']
+    MVNs_32 = matlab_loop_data['MVNs_32']
+    MVNs_34 = matlab_loop_data['MVNs_34']
+    MVNs_41 = matlab_loop_data['MVNs_41']
+    MVNs_42 = matlab_loop_data['MVNs_42']
+    MVNs_43 = matlab_loop_data['MVNs_43']
+
+    MVN = assemble_matrix(MVNs_f, MVNs_r,
+                          MVNs_12, MVNs_13, MVNs_14,
+                          MVNs_21, MVNs_23, MVNs_24,
+                          MVNs_31, MVNs_32, MVNs_34,
+                          MVNs_41, MVNs_42, MVNs_43)
+    
+    npt.assert_allclose(MVN, matlab_loop_data['MVN'])
