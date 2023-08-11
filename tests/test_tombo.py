@@ -7,7 +7,13 @@ import test_globals
 
 @pytest.fixture
 def matlab_wing_data():
-    return loadmat(f"tests/matlab_data/wing.mat")
+    return loadmat("tests/matlab_data/wing.mat",
+                   squeeze_me=True)
+
+@pytest.fixture
+def matlab_nd_data_data():
+    return loadmat("tests/matlab_data/nd_data.mat",
+                   squeeze_me=True)
 
 @pytest.fixture(params=[1, 2, 3, 4])
 def matlab_loop_data(request):
@@ -42,8 +48,48 @@ def test_symmetric_5_sided_mesh(matlab_wing_data):
     npt.assert_allclose(c_r, matlab_wing_data['c_r'])
     npt.assert_allclose(h_r, matlab_wing_data['h_r'])
 
-def test_nd_data():
-    pass
+def test_nd_data(matlab_wing_data, matlab_nd_data_data):
+    from tombo.nd_data import nd_data
+
+    xb_f = matlab_wing_data['xb_f']
+    xc_f = matlab_wing_data['xc_f']
+    xb_r = matlab_wing_data['xb_r']
+    xc_r = matlab_wing_data['xc_r']
+
+    l_f = matlab_wing_data['l_f']
+    c_f = matlab_wing_data['c_f']
+    h_f = matlab_wing_data['h_f']
+    l_r = matlab_wing_data['l_r']
+    c_r = matlab_wing_data['c_r']
+    h_r = matlab_wing_data['h_r']
+
+    l, c, h, phiT, phiB, a, beta, delta, gMax, U, \
+        xb_f, xc_f, xb_r, xc_r, b_f, b_r, e, d_, v_, rt = \
+            nd_data(l_f, c_f, h_f, l_r, c_r, h_r,
+                    g.phiT_, g.phiB_, g.a_, g.beta_, g.delta_, g.gMax_,
+                    g.U_, xb_f, xc_f, xb_r, xc_r, g.b_f, g.b_r, g.f_)
+    
+    npt.assert_allclose(l, matlab_nd_data_data['l'])
+    npt.assert_allclose(c, matlab_nd_data_data['c'])
+    npt.assert_allclose(h, matlab_nd_data_data['h'])
+    npt.assert_allclose(phiT, matlab_nd_data_data['phiT'])
+    npt.assert_allclose(phiB, matlab_nd_data_data['phiB'])
+    npt.assert_allclose(a, matlab_nd_data_data['a'])
+    npt.assert_allclose(beta, matlab_nd_data_data['beta'])
+    npt.assert_allclose(delta, matlab_nd_data_data['delta'])
+    npt.assert_allclose(gMax, matlab_nd_data_data['gMax'])
+    npt.assert_allclose(U, matlab_nd_data_data['U'])
+    npt.assert_allclose(xb_f, matlab_nd_data_data['xb_f'])
+    npt.assert_allclose(xc_f, matlab_nd_data_data['xc_f'])
+    npt.assert_allclose(xb_r, matlab_nd_data_data['xb_r'])
+    npt.assert_allclose(xc_r, matlab_nd_data_data['xc_r'])
+    npt.assert_allclose(b_f, matlab_nd_data_data['b_f'])
+    npt.assert_allclose(b_r, matlab_nd_data_data['b_r'])
+    npt.assert_allclose(e, matlab_nd_data_data['e'])
+    npt.assert_allclose(d_, matlab_nd_data_data['d_'])
+    npt.assert_allclose(v_[0], matlab_nd_data_data['v_']) # Compare only first element
+    npt.assert_allclose(rt, matlab_nd_data_data['rt'])
+
 
 def test_wing_total():
     pass
