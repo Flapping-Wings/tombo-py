@@ -22,7 +22,7 @@ def matlab_wing_total_data():
 
 @pytest.fixture(params=[1, 2, 3, 4])
 def matlab_loop_data(request):
-    return loadmat(f"tests/matlab_data/data{request.param}.mat",
+    return loadmat(f"tests/matlab_data/loop_data{request.param}.mat",
                    squeeze_me=True)
 
 def test_symmetric_5_sided_mesh(matlab_wing_data):
@@ -256,8 +256,8 @@ def test_lrs_wing_NVs(matlab_loop_data):
     beta = matlab_loop_data['beta']
     U = matlab_loop_data['U']
 
-    Vnc_f = np.zeros((g.nwing, nxt_f))
-    Vnc_r = np.zeros((g.nwing, nxt_r))
+    Vnc_f = np.empty((g.nwing, nxt_f))
+    Vnc_r = np.empty((g.nwing, nxt_r))
 
     for i in range(g.nwing):
         Vnc_f[i, :] = lrs_wing_NVs(0, i, xC_f, XC_f[:, :, i], NC_f[:, :, i], t, theta[i],
