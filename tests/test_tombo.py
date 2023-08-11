@@ -391,3 +391,73 @@ def test_solution(matlab_loop_data):
     GAMA = solution(nxt_f, nxt_r, MVN, Vnc_f, Vncw_f, Vnc_r, Vncw_r)
 
     npt.assert_allclose(GAMA, matlab_loop_data['GAMA'])
+
+@pytest.mark.skip(reason="values too close to zero to be meaningful")
+def test_s_impulse_WT(matlab_loop_data):
+    from tombo.s_impulse_WT import s_impulse_WT
+
+    istep = matlab_loop_data['istep'] - 1 # Convert from MATLAB indexing
+    U = matlab_loop_data['U']
+    t = matlab_loop_data['t']
+    beta = matlab_loop_data['beta']
+    phi = matlab_loop_data['phi']
+    theta = matlab_loop_data['theta']
+    a = matlab_loop_data['a']
+
+    Xt_f = matlab_loop_data['Xt_f']
+    Xw_f = matlab_loop_data['Xw_f']
+    GAM_f = matlab_loop_data['GAM_f']
+    GAMw_f = matlab_loop_data['GAMw_f']
+
+    Xt_r = matlab_loop_data['Xt_r']
+    Xw_r = matlab_loop_data['Xw_r']
+    GAM_r = matlab_loop_data['GAM_r']
+    GAMw_r = matlab_loop_data['GAMw_r']
+
+    limpa_f = matlab_loop_data['limpa_f']
+    aimpa_f = matlab_loop_data['aimpa_f']
+    limpw_f = matlab_loop_data['limpw_f']
+    aimpw_f = matlab_loop_data['aimpw_f']
+
+    limpa_r = matlab_loop_data['limpa_r']
+    aimpa_r = matlab_loop_data['aimpa_r']
+    limpw_r = matlab_loop_data['limpw_r']
+    aimpw_r = matlab_loop_data['aimpw_r']
+
+    limpa_f = np.empty((3, g.nstep, g.nwing))
+    limpa_r = np.empty((3, g.nstep, g.nwing))
+    aimpa_f = np.empty((3, g.nstep, g.nwing))
+    aimpa_r = np.empty((3, g.nstep, g.nwing))
+    limpw_f = np.empty((3, g.nstep, g.nwing))
+    limpw_r = np.empty((3, g.nstep, g.nwing))
+    aimpw_f = np.empty((3, g.nstep, g.nwing))
+    aimpw_r = np.empty((3, g.nstep, g.nwing))
+
+    limpa, aimpa, limpw, aimpw = \
+        s_impulse_WT(istep, U, t, Xt_f, Xw_f, GAM_f, GAMw_f,
+                     beta[0:2], phi[0:2], theta[0:2], a[0:2])
+    for j in range(3):
+        for w in range(g.nwing):
+            limpa_f[j, istep, w] = limpa[j, w]
+            aimpa_f[j, istep, w] = aimpa[j, w]
+            limpw_f[j, istep, w] = limpw[j, w]
+            aimpw_f[j, istep, w] = aimpw[j, w]
+
+    limpa, aimpa, limpw, aimpw = \
+        s_impulse_WT(istep, U, t, Xt_r, Xw_r, GAM_r, GAMw_r,
+                     beta[2:4], phi[2:4], theta[2:4], a[2:4])
+    for j in range(3):
+        for w in range(g.nwing):
+            limpa_r[j, istep, w] = limpa[j, w]
+            aimpa_r[j, istep, w] = aimpa[j, w]
+            limpw_r[j, istep, w] = limpw[j, w]
+            aimpw_r[j, istep, w] = aimpw[j, w]
+    
+    npt.assert_allclose(limpa_f, matlab_loop_data['limpa_f'])
+    npt.assert_allclose(aimpa_f, matlab_loop_data['aimpa_f'])
+    npt.assert_allclose(limpw_f, matlab_loop_data['limpw_f'])
+    npt.assert_allclose(aimpw_f, matlab_loop_data['aimpw_f'])
+    npt.assert_allclose(limpa_r, matlab_loop_data['limpa_r'])
+    npt.assert_allclose(aimpa_r, matlab_loop_data['aimpa_r'])
+    npt.assert_allclose(limpw_r, matlab_loop_data['limpw_r'])
+    npt.assert_allclose(aimpw_r, matlab_loop_data['aimpw_r'])
