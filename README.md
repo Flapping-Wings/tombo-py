@@ -63,3 +63,7 @@ The overall resolution of the simulation is controlled through the resolution of
 `hfactor` is the ratio of the height of each border element to the chord length of the wing. Smaller values lead to a higher resolution.
 
 `wfactor` is the ratio of the width of each border element to its height. Therefore, with the value of `3` that `config.toml` ships with, each border element is a 3x1 rectangle. We recommend running the simulation once with the shipped settings to cache the compiled functions and then changing `wfactor` to `1` for a square mesh.
+
+## Miscellaneous
+
+Early development of `tombo-py` was done in [this repo](https://github.com/Flapping-Wings/Flapping-Wings). Refer to that repo if documentation of old pull requests or issues is needed.
