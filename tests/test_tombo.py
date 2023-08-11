@@ -375,3 +375,19 @@ def test_assemble_matrix(matlab_loop_data):
                           MVNs_41, MVNs_42, MVNs_43)
     
     npt.assert_allclose(MVN, matlab_loop_data['MVN'])
+
+def test_solution(matlab_loop_data):
+    from tombo.solution import solution
+
+    MVN = matlab_loop_data['MVN']
+    nxt_f = matlab_loop_data['nxt_f']
+    Vnc_f = matlab_loop_data['Vnc_f']
+    Vncw_f = matlab_loop_data['Vncw_f']
+
+    nxt_r = matlab_loop_data['nxt_r']
+    Vnc_r = matlab_loop_data['Vnc_r']
+    Vncw_r = matlab_loop_data['Vncw_r']
+
+    GAMA = solution(nxt_f, nxt_r, MVN, Vnc_f, Vncw_f, Vnc_r, Vncw_r)
+
+    npt.assert_allclose(GAMA, matlab_loop_data['GAMA'])
