@@ -309,3 +309,42 @@ def test_n_vel_T_by_W(matlab_loop_data):
         
     npt.assert_allclose(Vncw_f, matlab_loop_data['Vncw_f'])
     npt.assert_allclose(Vncw_r, matlab_loop_data['Vncw_r'])
+
+def test_cross_matrix(matlab_loop_data):
+    from tombo.cross_matrix import cross_matrix
+
+    XC_f = matlab_loop_data['XC_f']
+    NC_f = matlab_loop_data['NC_f']
+    Xt_f = matlab_loop_data['Xt_f']
+    nxt_f = matlab_loop_data['nxt_f']
+
+    XC_r = matlab_loop_data['XC_r']
+    NC_r = matlab_loop_data['NC_r']
+    Xt_r = matlab_loop_data['Xt_r']
+    nxt_r = matlab_loop_data['nxt_r']
+
+    MVNs_12 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_f[:, :, :, 1], nxt_f, g.RCUT)
+    MVNs_13 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_r[:, :, :, 0], nxt_r, g.RCUT)
+    MVNs_14 = cross_matrix(XC_f[:, :, 0], NC_f[:, :, 0], nxt_f, Xt_r[:, :, :, 1], nxt_r, g.RCUT)
+    MVNs_21 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_f[:, :, :, 0], nxt_f, g.RCUT)
+    MVNs_23 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_r[:, :, :, 0], nxt_r, g.RCUT)
+    MVNs_24 = cross_matrix(XC_f[:, :, 1], NC_f[:, :, 1], nxt_f, Xt_r[:, :, :, 1], nxt_r, g.RCUT)
+    MVNs_31 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_f[:, :, :, 0], nxt_f, g.RCUT)
+    MVNs_32 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_f[:, :, :, 1], nxt_f, g.RCUT)
+    MVNs_34 = cross_matrix(XC_r[:, :, 0], NC_r[:, :, 0], nxt_r, Xt_r[:, :, :, 1], nxt_r, g.RCUT)
+    MVNs_41 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_f[:, :, :, 0], nxt_f, g.RCUT)
+    MVNs_42 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_f[:, :, :, 1], nxt_f, g.RCUT)
+    MVNs_43 = cross_matrix(XC_r[:, :, 1], NC_r[:, :, 1], nxt_r, Xt_r[:, :, :, 0], nxt_r, g.RCUT)
+
+    npt.assert_allclose(MVNs_12, matlab_loop_data['MVNs_12'])
+    npt.assert_allclose(MVNs_13, matlab_loop_data['MVNs_13'])
+    npt.assert_allclose(MVNs_14, matlab_loop_data['MVNs_14'])
+    npt.assert_allclose(MVNs_21, matlab_loop_data['MVNs_21'])
+    npt.assert_allclose(MVNs_23, matlab_loop_data['MVNs_23'])
+    npt.assert_allclose(MVNs_24, matlab_loop_data['MVNs_24'])
+    npt.assert_allclose(MVNs_31, matlab_loop_data['MVNs_31'])
+    npt.assert_allclose(MVNs_32, matlab_loop_data['MVNs_32'])
+    npt.assert_allclose(MVNs_34, matlab_loop_data['MVNs_34'])
+    npt.assert_allclose(MVNs_41, matlab_loop_data['MVNs_41'])
+    npt.assert_allclose(MVNs_42, matlab_loop_data['MVNs_42'])
+    npt.assert_allclose(MVNs_43, matlab_loop_data['MVNs_43'])
