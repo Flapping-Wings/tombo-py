@@ -11,7 +11,6 @@ with open('tests/test_config.toml', mode='rb') as file:
 # -------
 
 g.solver = config['general']['solver']
-g.idebg = config['general']['idebg']
 g.save_data = config['general']['save_data']
 
 

@@ -3,8 +3,6 @@
 # - forward elim/backward sub (False),
 # - backslash (True)
 solver = false
-# Toggle debugging
-idebg = false
 # Toggle output data being saved (disable for testing)
 save_data = true
 
