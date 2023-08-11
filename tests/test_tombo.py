@@ -177,3 +177,59 @@ def test_wing_m(matlab_loop_data):
     npt.assert_allclose(dph, matlab_loop_data['dph'])
     npt.assert_allclose(dth, matlab_loop_data['dth'])
 
+def test_lr_mass_L2GT(matlab_loop_data):
+    from tombo.lr_mass_L2GT import lr_mass_L2GT
+
+    nxc_f = matlab_loop_data['nxc_f']
+    nxc_r = matlab_loop_data['nxc_r']
+    nxb_f = matlab_loop_data['nxb_f']
+    nxb_r = matlab_loop_data['nxb_r']
+    nxt_f = matlab_loop_data['nxt_f']
+    nxt_r = matlab_loop_data['nxt_r']
+
+    beta = matlab_loop_data['beta']
+    delta = matlab_loop_data['delta']
+    phi = matlab_loop_data['phi']
+    theta = matlab_loop_data['theta']
+    a = matlab_loop_data['a']
+    U = matlab_loop_data['U']
+    t = matlab_loop_data['t']
+
+    b_f = matlab_loop_data['b_f']
+    xc_f = matlab_loop_data['xc_f']
+    xb_f = matlab_loop_data['xb_f']
+    xt_f = matlab_loop_data['xt_f']
+    xC_f = matlab_loop_data['xC_f']
+    nC_f = matlab_loop_data['nC_f']
+
+    b_r = matlab_loop_data['b_r']
+    xc_r = matlab_loop_data['xc_r']
+    xb_r = matlab_loop_data['xb_r']
+    xt_r = matlab_loop_data['xt_r']
+    xC_r = matlab_loop_data['xC_r']
+    nC_r = matlab_loop_data['nC_r']
+
+    Xc_f = np.empty((3, 4, nxc_f, 2))
+    Xc_r = np.empty((3, 4, nxc_r, 2))
+    Xb_f = np.empty((3, 4, nxb_f, 2))
+    Xb_r = np.empty((3, 4, nxb_r, 2))
+    Xt_f = np.empty((3, 4, nxt_f, 2))
+    Xt_r = np.empty((3, 4, nxt_r, 2))
+    XC_f = np.empty((3, nxt_f, 2))
+    XC_r = np.empty((3, nxt_r, 2))
+    NC_f = np.empty((3, nxt_f, 2))
+    NC_r = np.empty((3, nxt_r, 2))
+
+    for i in range(g.nwing):
+        Xc_f[..., i], Xb_f[..., i], Xt_f[..., i], XC_f[..., i], NC_f[..., i] = \
+            lr_mass_L2GT(i, beta[i], delta, phi[i], theta[i], a[i], U, t, b_f,
+                                xc_f, xb_f, xt_f, xC_f, nC_f)
+        Xc_r[..., i], Xb_r[..., i], Xt_r[..., i], XC_r[..., i], NC_r[..., i] = \
+            lr_mass_L2GT(i, beta[i + 2], delta, phi[i + 2], theta[i + 2], a[i + 2], U, t, b_r,
+                                xc_r, xb_r, xt_r, xC_r, nC_r)
+
+    npt.assert_allclose(Xc_f, matlab_loop_data['Xc_f'])
+    npt.assert_allclose(Xb_f, matlab_loop_data['Xb_f'])
+    npt.assert_allclose(Xt_f, matlab_loop_data['Xt_f'])
+    npt.assert_allclose(XC_f, matlab_loop_data['XC_f'])
+    npt.assert_allclose(NC_f, matlab_loop_data['NC_f'])
