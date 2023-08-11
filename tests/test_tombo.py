@@ -15,6 +15,11 @@ def matlab_nd_data_data():
     return loadmat("tests/matlab_data/nd_data.mat",
                    squeeze_me=True)
 
+@pytest.fixture
+def matlab_wing_total_data():
+    return loadmat("tests/matlab_data/wing_total.mat",
+                   squeeze_me=True)
+
 @pytest.fixture(params=[1, 2, 3, 4])
 def matlab_loop_data(request):
     return loadmat(f"tests/matlab_data/data{request.param}.mat",
@@ -55,7 +60,6 @@ def test_nd_data(matlab_wing_data, matlab_nd_data_data):
     xc_f = matlab_wing_data['xc_f']
     xb_r = matlab_wing_data['xb_r']
     xc_r = matlab_wing_data['xc_r']
-
     l_f = matlab_wing_data['l_f']
     c_f = matlab_wing_data['c_f']
     h_f = matlab_wing_data['h_f']
@@ -91,11 +95,62 @@ def test_nd_data(matlab_wing_data, matlab_nd_data_data):
     npt.assert_allclose(rt, matlab_nd_data_data['rt'])
 
 
-def test_wing_total():
-    pass
+def test_wing_total(matlab_nd_data_data, matlab_wing_total_data):
+    from tombo.wing_total import wing_total
 
-def test_lr_set_matrix():
-    pass
+    xb_f = matlab_nd_data_data['xb_f']
+    nxb_f = matlab_nd_data_data['nxb_f']
+    nb_f = matlab_nd_data_data['nb_f']
+    xc_f = matlab_nd_data_data['xc_f']
+    nxc_f = matlab_nd_data_data['nxc_f']
+    nc_f = matlab_nd_data_data['nc_f']
+
+    xb_r = matlab_nd_data_data['xb_r']
+    nxb_r = matlab_nd_data_data['nxb_r']
+    nb_r = matlab_nd_data_data['nb_r']
+    xc_r = matlab_nd_data_data['xc_r']
+    nxc_r = matlab_nd_data_data['nxc_r']
+    nc_r = matlab_nd_data_data['nc_r']
+
+    xc_f, xb_f, xt_f, nxt_f, xC_f, nC_f = \
+        wing_total(xb_f, nxb_f, nb_f, xc_f, nxc_f, nc_f)
+    xc_r, xb_r, xt_r, nxt_r, xC_r, nC_r = \
+        wing_total(xb_r, nxb_r, nb_r, xc_r, nxc_r, nc_r)
+    
+    npt.assert_allclose(xc_f, matlab_wing_total_data['xc_f'])
+    npt.assert_allclose(xb_f, matlab_wing_total_data['xb_f'])
+    npt.assert_allclose(xt_f, matlab_wing_total_data['xt_f'])
+    npt.assert_allclose(nxt_f, matlab_wing_total_data['nxt_f'])
+    npt.assert_allclose(xC_f, matlab_wing_total_data['xC_f'])
+    npt.assert_allclose(nC_f, matlab_wing_total_data['nC_f'])
+
+    npt.assert_allclose(xc_r, matlab_wing_total_data['xc_r'])
+    npt.assert_allclose(xb_r, matlab_wing_total_data['xb_r'])
+    npt.assert_allclose(xt_r, matlab_wing_total_data['xt_r'])
+    npt.assert_allclose(nxt_r, matlab_wing_total_data['nxt_r'])
+    npt.assert_allclose(xC_r, matlab_wing_total_data['xC_r'])
+    npt.assert_allclose(nC_r, matlab_wing_total_data['nC_r'])
+
+
+def test_lr_set_matrix(matlab_wing_total_data, matlab_loop_data):
+    from tombo.lr_set_matrix import lr_set_matrix
+
+    xt_f = matlab_wing_total_data['xt_f']
+    nxt_f = matlab_wing_total_data['nxt_f']
+    xC_f = matlab_wing_total_data['xC_f']
+    nC_f = matlab_wing_total_data['nC_f']
+
+    xt_r = matlab_wing_total_data['xt_r']
+    nxt_r = matlab_wing_total_data['nxt_r']
+    xC_r = matlab_wing_total_data['xC_r']
+    nC_r = matlab_wing_total_data['nC_r']
+
+    MVNs_f = lr_set_matrix(xt_f, nxt_f, xC_f, nC_f, g.RCUT)
+    MVNs_r = lr_set_matrix(xt_r, nxt_r, xC_r, nC_r, g.RCUT)
+
+    npt.assert_allclose(MVNs_f, matlab_loop_data['MVNs_f'])
+    npt.assert_allclose(MVNs_r, matlab_loop_data['MVNs_r'])
+
 
 def test_wing_m(matlab_loop_data):
     from tombo.wing_m import wing_m
