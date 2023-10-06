@@ -16,6 +16,11 @@ pip install .
 pip install --editable .[test]
 ```
 
+If you do not have an interactive backend for Matplotlib installed, run
+```
+sudo apt install python3-tk
+```
+
 ## Usage
 
 `tombo-py` comes with a command line interface and is primarily used with subcommands. Run `tombo -h` to see the list of subcommands. The help option is available for each subcommand as well.
