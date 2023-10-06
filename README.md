@@ -16,7 +16,7 @@ pip install .
 pip install --editable .[test]
 ```
 
-If you do not have an interactive backend for Matplotlib installed, run
+If you do not have an interactive backend for Matplotlib installed, then run
 ```
 sudo apt install python3-tk
 ```
