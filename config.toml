@@ -18,7 +18,7 @@ plot_folder = "output/plots"
 # - front right
 # - front left
 # - rear right
-# - rear left)
+# - rear left
 labels = [['fr', 'fl'], ['rr', 'rl']]
 
     # Enable/disble plotting for each category
